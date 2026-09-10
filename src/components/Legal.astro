@@ -1,0 +1,75 @@
+---
+const refs = [
+  {
+    title: 'LFT Art. 805',
+    body: 'Si el patrón no exhibe los documentos que debe conservar, se presumen ciertos los hechos que alega el trabajador. La carga de la prueba es tuya.',
+  },
+  {
+    title: 'LFT Art. 132, Fr. XXXIV',
+    body: 'Registro electrónico de asistencia obligatorio a partir del 1 de enero de 2027.',
+  },
+  {
+    title: 'LFT Art. 994, Fr. IV Bis',
+    body: 'Sanciones de 250 a 5,000 UMA por cada trabajador afectado.',
+  },
+  {
+    title: 'NOM-151-SCFI-2016',
+    body: 'Conservación de mensajes de datos con constancia de un Prestador de Servicios de Certificación. Es lo que convierte un registro en evidencia que un tercero puede verificar.',
+  },
+];
+---
+
+<section id="valor-probatorio" class="scroll-mt-16 px-5 py-6 sm:px-8">
+  <div
+    class="relative mx-auto max-w-6xl overflow-hidden rounded-[2rem] bg-ink-900 px-6 py-14 sm:px-12 sm:py-20"
+  >
+    <!-- textura sutil -->
+    <div
+      aria-hidden="true"
+      class="pointer-events-none absolute inset-0"
+      style="background:
+        radial-gradient(42rem 28rem at 100% 0%, rgb(53 161 98 / 0.14), transparent 55%),
+        radial-gradient(36rem 24rem at 0% 100%, rgb(217 168 63 / 0.07), transparent 55%);"
+    >
+    </div>
+
+    <div class="relative grid gap-12 lg:grid-cols-[1fr_1.1fr] lg:gap-16">
+      <div class="reveal">
+        <h2
+          class="font-display max-w-md text-3xl leading-[1.12] font-bold tracking-tight text-white text-balance sm:text-4xl"
+        >
+          Si te demandan, no ganas con lo que registraste. Ganas con lo que puedes exhibir.
+        </h2>
+        <div class="mt-6 max-w-md space-y-4 text-[0.975rem] leading-relaxed text-neutral-300">
+          <p>
+            La discusión pública se ha centrado en la multa. En la práctica, lo que quiebra a una
+            PyME es una audiencia donde el patrón no puede presentar los registros y la ley
+            resuelve en su contra.
+          </p>
+          <p>
+            Un Excel se edita, y esa es exactamente la objeción que enfrentarás. Klokk existe para
+            cerrar esa puerta: cada registro nace fuera del alcance del patrón, con hora de
+            servidor y trazabilidad de origen.
+          </p>
+        </div>
+      </div>
+
+      <div>
+        <ul class="space-y-7">
+          {
+            refs.map((ref, i) => (
+              <li class="reveal border-l-2 border-amber-line pl-5" style={`--reveal-delay: ${i * 90}ms`}>
+                <h3 class="font-semibold text-white">{ref.title}</h3>
+                <p class="mt-1.5 text-[0.925rem] leading-relaxed text-neutral-300">{ref.body}</p>
+              </li>
+            ))
+          }
+        </ul>
+        <p class="reveal mt-9 border-t border-white/10 pt-5 text-[0.8rem] leading-relaxed text-neutral-400">
+          Estas referencias son contexto comercial, no asesoría legal. Valida tu caso concreto con
+          tu abogado laboral.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>

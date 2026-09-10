@@ -1,0 +1,28 @@
+---
+import Logo from './Logo.astro';
+import { LINKS } from '../lib/links';
+---
+
+<footer class="border-t border-neutral-200 bg-neutral-50">
+  <div class="mx-auto grid max-w-6xl gap-10 px-5 py-12 sm:px-8 md:grid-cols-[1fr_1.3fr_auto] md:gap-14">
+    <div>
+      <Logo size={30} />
+      <p class="mt-4 text-[0.875rem] leading-relaxed text-neutral-600">
+        Klokk Technology, S. de R.L. de C.V.<br />
+        Mérida, Yucatán, México.
+      </p>
+    </div>
+
+    <p class="max-w-md text-[0.85rem] leading-relaxed text-neutral-500">
+      El contenido de este sitio es informativo y comercial. No constituye asesoría legal ni
+      fiscal. Las referencias a la Ley Federal del Trabajo se incluyen como contexto y deben
+      validarse con un abogado laboral.
+    </p>
+
+    <ul class="space-y-2 text-[0.875rem] font-medium text-ink-900">
+      <li><a href="/aviso-de-privacidad" class="underline-offset-4 hover:underline">Aviso de privacidad</a></li>
+      <li><a href="/terminos-de-servicio" class="underline-offset-4 hover:underline">Términos de servicio</a></li>
+      <li><a href={LINKS.whatsapp} class="underline-offset-4 hover:underline">Contacto</a></li>
+    </ul>
+  </div>
+</footer>

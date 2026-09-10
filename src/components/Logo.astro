@@ -1,0 +1,36 @@
+---
+interface Props {
+  class?: string;
+  size?: number;
+}
+const { class: className = '', size = 34 } = Astro.props;
+---
+
+<span class={`inline-flex items-center gap-2.5 ${className}`}>
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 64 64"
+    aria-hidden="true"
+    class="shrink-0 rounded-[23%] shadow-sm"
+  >
+    <defs>
+      <linearGradient id="klokk-g" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#3aad69"></stop>
+        <stop offset="1" stop-color="#2a8a52"></stop>
+      </linearGradient>
+    </defs>
+    <rect width="64" height="64" rx="15" fill="url(#klokk-g)"></rect>
+    <path
+      d="M32 13c10.5 0 19 7.6 19 17s-8.5 17-19 17c-2.3 0-4.5-.35-6.5-1L17 49l2.2-7.2C15.4 38.7 13 34.6 13 30c0-9.4 8.5-17 19-17z"
+      fill="none"
+      stroke="#fff"
+      stroke-width="3.4"
+      stroke-linejoin="round"></path>
+    <g stroke="#fff" stroke-width="4.6" stroke-linecap="round">
+      <path d="M27 22.5v15"></path>
+      <path d="M37.5 22.5 27.6 30l9.9 7.5"></path>
+    </g>
+  </svg>
+  <span class="font-display text-[1.35rem] font-bold tracking-tight">Klokk</span>
+</span>

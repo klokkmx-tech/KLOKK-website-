@@ -1,0 +1,31 @@
+---
+import { LINKS } from '../lib/links';
+---
+
+<section class="py-24 sm:py-32">
+  <div class="reveal mx-auto max-w-2xl px-5 text-center sm:px-8">
+    <h2
+      class="font-display text-3xl leading-[1.12] font-bold tracking-tight text-balance sm:text-[2.6rem]"
+    >
+      Veinte minutos, tu operación, sin diapositivas.
+    </h2>
+    <p class="mx-auto mt-5 max-w-md text-lg leading-relaxed text-neutral-600">
+      Te enseñamos el registro en vivo desde WhatsApp y te decimos qué tan expuesto está tu
+      control actual.
+    </p>
+    <div class="mt-9 flex flex-wrap justify-center gap-3.5">
+      <a
+        href={LINKS.demo}
+        class="rounded-full bg-brand-600 px-7 py-3.5 text-[0.95rem] font-semibold text-white shadow-md shadow-brand-600/25 transition hover:-translate-y-0.5 hover:bg-brand-700 hover:shadow-lg hover:shadow-brand-600/25"
+      >
+        Agendar demo
+      </a>
+      <a
+        href={LINKS.whatsapp}
+        class="rounded-full border border-neutral-300 bg-white px-7 py-3.5 text-[0.95rem] font-semibold text-ink-900 transition hover:-translate-y-0.5 hover:border-neutral-400"
+      >
+        Escribirnos por WhatsApp
+      </a>
+    </div>
+  </div>
+</section>

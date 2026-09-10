@@ -1,0 +1,62 @@
+---
+const faqs = [
+  {
+    q: 'Ya llevo la asistencia en Excel. ¿Para qué cambiar?',
+    a: 'El Excel no es ilegal y nadie te va a multar por usarlo. El problema aparece después: en una audiencia, un archivo que tú puedes editar es fácil de objetar, y si no logras acreditar los registros, el Art. 805 resuelve la duda a favor del trabajador. Klokk no te ahorra trabajo de captura, te cambia la posición probatoria.',
+  },
+  {
+    q: '¿Mis empleados tienen que instalar algo?',
+    a: 'No. Mandan un mensaje al número de la empresa desde el WhatsApp que ya usan. No hay app, ni terminal, ni lector de huella que comprar o reponer.',
+  },
+  {
+    q: '¿Se conecta con mi sistema de nómina?',
+    a: 'Klokk exporta el periodo en un formato preparado para integrarse con CONTPAQi y para que tu contador lo cargue. No es una integración nativa y no hacemos trámites ante el IMSS: somos la capa de datos que alimenta a quien sí los hace.',
+  },
+  {
+    q: '¿Qué pasa si un empleado checa desde su casa?',
+    a: 'El registro se guarda igual, pero con su ubicación y fuera de la geocerca del centro de trabajo. Tú decides qué hacer con eso; nosotros lo dejamos documentado.',
+  },
+  {
+    q: '¿Cuánto tarda arrancar?',
+    a: 'Damos de alta tu empresa, tus centros de trabajo y tu plantilla contigo en la primera sesión. El equipo puede checar desde el día siguiente.',
+  },
+  {
+    q: '¿Cuánto tiempo guardan mis registros?',
+    a: 'Conservamos el expediente por lo menos cinco años, que es el piso que te exige la normativa fiscal y de seguridad social. Tratamos los datos de tu personal como responsable bajo la LFPDPPP.',
+  },
+];
+---
+
+<section class="border-t border-neutral-100 py-20 sm:py-28">
+  <div class="mx-auto max-w-3xl px-5 sm:px-8">
+    <h2 class="reveal font-display text-3xl font-bold tracking-tight sm:text-4xl">
+      Lo que nos preguntan antes de firmar
+    </h2>
+
+    <div class="mt-10 divide-y divide-neutral-200 border-y border-neutral-200">
+      {
+        faqs.map((faq, i) => (
+          <details class="group" style={`--reveal-delay: ${i * 60}ms`}>
+            <summary class="reveal flex cursor-pointer list-none items-center justify-between gap-6 py-5 text-left font-bold text-ink-900 [&::-webkit-details-marker]:hidden">
+              {faq.q}
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.4"
+                stroke-linecap="round"
+                class="shrink-0 text-neutral-400 transition-transform duration-300 group-open:rotate-45"
+                aria-hidden="true"
+              >
+                <path d="M12 5v14M5 12h14" />
+              </svg>
+            </summary>
+            <p class="pb-6 text-[0.95rem] leading-relaxed text-neutral-600">{faq.a}</p>
+          </details>
+        ))
+      }
+    </div>
+  </div>
+</section>

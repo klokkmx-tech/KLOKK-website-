@@ -1,0 +1,84 @@
+---
+import { LINKS } from '../lib/links';
+
+const planes = [
+  {
+    name: 'Starter',
+    scope: 'Un solo centro de trabajo',
+    body: 'Asistencia y geolocalización por WhatsApp, evidencia certificada NOM-151 y exportación mensual del expediente.',
+    cta: 'Pedir precio',
+    primary: false,
+  },
+  {
+    name: 'PyME',
+    scope: 'Varias sucursales o cuadrillas',
+    body: 'Todo lo de Starter, más geocercas por sitio, turnos rotativos y usuarios administradores.',
+    cta: 'Pedir precio',
+    primary: false,
+  },
+  {
+    name: 'Pro',
+    scope: 'Operación con rotación alta',
+    body: 'Todo lo de PyME, más reportes por centro de costo y acceso anticipado a los módulos en desarrollo.',
+    cta: 'Pedir precio',
+    primary: false,
+  },
+  {
+    name: 'Enterprise',
+    scope: 'Más de 500 empleados',
+    body: 'Implementación acompañada, requisitos de retención y auditoría a la medida.',
+    cta: 'Hablar con ventas',
+    primary: true,
+  },
+];
+---
+
+<section id="precios" class="scroll-mt-16 border-t border-neutral-100 py-20 sm:py-28">
+  <div class="mx-auto max-w-6xl px-5 sm:px-8">
+    <div class="reveal grid gap-8 lg:grid-cols-[1fr_1.1fr] lg:gap-16">
+      <h2
+        class="font-display max-w-sm text-3xl leading-[1.12] font-bold tracking-tight text-balance sm:text-4xl"
+      >
+        Una tarifa fija al mes. Contrates a quien contrates.
+      </h2>
+      <p class="max-w-lg self-end text-[0.975rem] leading-relaxed text-neutral-600">
+        El cobro por empleado castiga tu crecimiento y te vuelve impredecible en temporada alta.
+        Aquí no. Si tu plantilla sube en diciembre, tu factura no. El plan depende de cuántos
+        centros de trabajo tienes, no de cuánta gente contratas.
+      </p>
+    </div>
+
+    <ul class="mt-14 border-t-2 border-ink-900">
+      {
+        planes.map((plan, i) => (
+          <li
+            class="reveal grid items-center gap-4 border-b border-neutral-200 py-7 sm:grid-cols-[11rem_1fr_auto] sm:gap-8 lg:grid-cols-[14rem_1fr_auto]"
+            style={`--reveal-delay: ${i * 90}ms`}
+          >
+            <div>
+              <h3 class="font-display text-xl font-bold text-ink-900">{plan.name}</h3>
+              <p class="mt-1 text-[0.85rem] text-neutral-500">{plan.scope}</p>
+            </div>
+            <p class="max-w-md text-[0.925rem] leading-relaxed text-neutral-600">{plan.body}</p>
+            <a
+              href={LINKS.whatsapp}
+              class:list={[
+                'justify-self-start rounded-full px-6 py-2.5 text-sm font-semibold whitespace-nowrap transition sm:justify-self-end',
+                plan.primary
+                  ? 'bg-brand-600 text-white shadow-sm hover:bg-brand-700'
+                  : 'border border-neutral-300 bg-white text-ink-900 hover:border-neutral-400',
+              ]}
+            >
+              {plan.cta}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <p class="reveal mt-6 text-[0.85rem] text-neutral-500">
+      Todos los planes incluyen alta acompañada, sin costo de implementación y sin contrato
+      forzoso.
+    </p>
+  </div>
+</section>

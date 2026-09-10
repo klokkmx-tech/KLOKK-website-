@@ -1,0 +1,84 @@
+---
+import ChatMockup from './ChatMockup.astro';
+import { LINKS } from '../lib/links';
+
+const bullets = [
+  'Desde 25 empleados, sin tope',
+  'Tarifa plana, no por empleado',
+  'Sin app que instalar',
+];
+---
+
+<section class="relative overflow-hidden pt-28 pb-16 sm:pt-36 sm:pb-24">
+  <!-- fondo sutil -->
+  <div
+    aria-hidden="true"
+    class="pointer-events-none absolute inset-0 -z-10"
+    style="background:
+      radial-gradient(48rem 30rem at 85% 0%, rgb(53 161 98 / 0.07), transparent 60%),
+      radial-gradient(40rem 26rem at 0% 100%, rgb(15 50 55 / 0.05), transparent 60%);"
+  >
+  </div>
+
+  <div class="mx-auto grid max-w-6xl items-center gap-14 px-5 sm:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10">
+    <div>
+      <p
+        class="animate-fade-up inline-flex flex-wrap items-center gap-x-2.5 gap-y-1 rounded-full border border-neutral-200 bg-white py-1.5 pr-4 pl-3 text-[0.8rem] shadow-sm"
+      >
+        <span class="size-2 rounded-full bg-brand-500"></span>
+        <span class="font-medium text-ink-900">Registro de Asistencia por WhatsApp</span>
+        <span class="font-semibold text-neutral-500">· LFT Art. 132, Fr. XXXIV</span>
+      </p>
+
+      <h1
+        class="animate-fade-up font-display mt-6 text-[2.6rem] leading-[1.05] font-bold tracking-tight text-balance sm:text-6xl"
+        style="animation-delay: 0.08s"
+      >
+        Registrar la asistencia no es lo mismo que probarla.
+      </h1>
+
+      <p
+        class="animate-fade-up mt-6 max-w-xl text-lg leading-relaxed text-neutral-600"
+        style="animation-delay: 0.16s"
+      >
+        Tu equipo checa desde WhatsApp, sin instalar nada. Klokk guarda cada registro con hora de
+        servidor, ubicación y sellado certificado NOM-151, <strong class="font-semibold text-ink-900">en un expediente que puedes exhibir el día que te lo pidan.</strong>
+      </p>
+
+      <div class="animate-fade-up mt-8 flex flex-wrap gap-3.5" style="animation-delay: 0.24s">
+        <a
+          href={LINKS.demo}
+          class="rounded-full bg-brand-600 px-7 py-3.5 text-[0.95rem] font-semibold text-white shadow-md shadow-brand-600/25 transition hover:-translate-y-0.5 hover:bg-brand-700 hover:shadow-lg hover:shadow-brand-600/25"
+        >
+          Agendar demo de 20 min
+        </a>
+        <a
+          href={LINKS.whatsapp}
+          class="rounded-full border border-neutral-300 bg-white px-7 py-3.5 text-[0.95rem] font-semibold text-ink-900 transition hover:-translate-y-0.5 hover:border-neutral-400"
+        >
+          Escribirnos por WhatsApp
+        </a>
+      </div>
+
+      <ul
+        class="animate-fade-up mt-9 flex flex-wrap gap-x-7 gap-y-2.5 text-[0.9rem] text-neutral-600"
+        style="animation-delay: 0.32s"
+      >
+        {
+          bullets.map((b) => (
+            <li class="flex items-center gap-2">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="text-brand-600">
+                <path d="M4.5 12.5l5 5 10-11" />
+              </svg>
+              {b}
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <div class="animate-fade-up" style="animation-delay: 0.2s">
+      <ChatMockup />
+    </div>
+  </div>
+</section>

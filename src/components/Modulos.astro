@@ -1,0 +1,95 @@
+---
+const disponibles = [
+  {
+    title: 'Registro de asistencia',
+    body: 'Entradas, salidas y turnos por WhatsApp, con folio y hora de servidor.',
+  },
+  {
+    title: 'Geolocalización',
+    body: 'Ubicación del registro y geocercas por centro de trabajo.',
+  },
+  {
+    title: 'Evidencia certificada NOM-151',
+    body: 'Cada registro se conserva con sellado de tiempo de un Prestador de Servicios de Certificación autorizado.',
+  },
+];
+
+const construccion = [
+  {
+    status: 'en desarrollo',
+    title: 'Análisis de nómina con IA',
+    body: 'Detección de inconsistencias entre asistencia y nómina. Los cálculos los hace un motor determinista, nunca un modelo de lenguaje.',
+  },
+  {
+    status: 'planeado',
+    title: 'Capacitación y DC-3',
+    body: 'Constancias de habilidades bajo el Art. 153 y el formato de la STPS.',
+  },
+  {
+    status: 'planeado',
+    title: 'Expediente laboral certificado',
+    body: 'Todo el historial del trabajador en un solo paquete exportable, sellado de punta a punta.',
+  },
+];
+---
+
+<section id="que-incluye" class="scroll-mt-16 border-t border-neutral-100 py-20 sm:py-28">
+  <div class="mx-auto max-w-6xl px-5 sm:px-8">
+    <div class="reveal max-w-2xl">
+      <h2 class="font-display text-3xl font-bold tracking-tight sm:text-4xl">
+        Qué está funcionando hoy, y qué viene
+      </h2>
+      <p class="mt-4 text-lg leading-relaxed text-neutral-600">
+        Publicamos el estado real de cada módulo. Si algo todavía no existe, aquí lo vas a leer
+        así.
+      </p>
+    </div>
+
+    <div class="mt-12 grid gap-12 lg:grid-cols-2 lg:gap-16">
+      <div class="reveal">
+        <h3 class="text-[0.95rem] font-bold text-ink-900">Disponible hoy</h3>
+        <ul class="mt-5 divide-y divide-neutral-100">
+          {
+            disponibles.map((m) => (
+              <li class="flex gap-5 py-5 first:pt-0">
+                <span class="mt-0.5 h-fit shrink-0 rounded-md bg-brand-100 px-2 py-1 font-mono text-[0.7rem] font-medium text-brand-700">
+                  en vivo
+                </span>
+                <div>
+                  <h4 class="font-bold text-ink-900">{m.title}</h4>
+                  <p class="mt-1 text-[0.9rem] leading-relaxed text-neutral-600">{m.body}</p>
+                </div>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <div class="reveal" style="--reveal-delay: 120ms">
+        <h3 class="text-[0.95rem] font-bold text-ink-900">En construcción</h3>
+        <ul class="mt-5 divide-y divide-neutral-100">
+          {
+            construccion.map((m) => (
+              <li class="flex gap-5 py-5 first:pt-0">
+                <span
+                  class:list={[
+                    'mt-0.5 h-fit shrink-0 rounded-md px-2 py-1 font-mono text-[0.7rem] font-medium',
+                    m.status === 'en desarrollo'
+                      ? 'bg-amber-badge text-amber-ink'
+                      : 'bg-neutral-100 text-neutral-500',
+                  ]}
+                >
+                  {m.status}
+                </span>
+                <div>
+                  <h4 class="font-bold text-ink-900">{m.title}</h4>
+                  <p class="mt-1 text-[0.9rem] leading-relaxed text-neutral-600">{m.body}</p>
+                </div>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>

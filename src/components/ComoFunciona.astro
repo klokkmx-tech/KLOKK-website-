@@ -1,0 +1,42 @@
+---
+const pasos = [
+  {
+    n: '1',
+    title: 'El empleado manda un mensaje',
+    body: 'Escribe «entrada» o «salida» al número de tu empresa. Sin app, sin terminal, sin huella, sin capacitación.',
+  },
+  {
+    n: '2',
+    title: 'Klokk valida y sella el registro',
+    body: 'Se guarda con hora de servidor, ubicación del envío y folio único, y se conserva con sellado NOM-151. El registro no se edita desde el celular del empleado, ni desde tu computadora, ni desde la nuestra.',
+  },
+  {
+    n: '3',
+    title: 'Tú exportas el expediente',
+    body: 'Descarga el periodo completo en un archivo listo para tu contador, una inspección o tu abogado.',
+  },
+];
+---
+
+<section id="como-funciona" class="scroll-mt-16 py-20 sm:py-28">
+  <div class="mx-auto max-w-6xl px-5 sm:px-8">
+    <div class="reveal max-w-xl">
+      <h2 class="font-display text-3xl font-bold tracking-tight sm:text-4xl">Cómo funciona</h2>
+      <p class="mt-4 text-lg leading-relaxed text-neutral-600">
+        Tres pasos. El empleado no aprende nada nuevo: ya sabe usar WhatsApp.
+      </p>
+    </div>
+
+    <ol class="mt-12 grid gap-10 sm:grid-cols-3 sm:gap-8">
+      {
+        pasos.map((paso, i) => (
+          <li class="reveal border-t-2 border-ink-900 pt-6" style={`--reveal-delay: ${i * 110}ms`}>
+            <span class="font-mono text-sm font-medium text-brand-600">{paso.n}</span>
+            <h3 class="mt-2 text-lg font-bold text-ink-900">{paso.title}</h3>
+            <p class="mt-2.5 text-[0.925rem] leading-relaxed text-neutral-600">{paso.body}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>

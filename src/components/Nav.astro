@@ -1,0 +1,102 @@
+---
+import Logo from './Logo.astro';
+import { LINKS } from '../lib/links';
+
+const items = [
+  { href: '#como-funciona', label: 'Cómo funciona' },
+  { href: '#valor-probatorio', label: 'Valor probatorio' },
+  { href: '#que-incluye', label: 'Qué incluye' },
+  { href: '#precios', label: 'Precios' },
+];
+---
+
+<header
+  id="site-nav"
+  class="fixed inset-x-0 top-0 z-50 border-b border-transparent bg-white/80 backdrop-blur-md transition-[border-color,background-color] duration-300"
+>
+  <nav class="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 sm:px-8">
+    <a href="#" aria-label="Klokk — inicio">
+      <Logo />
+    </a>
+
+    <ul class="hidden items-center gap-7 text-[0.925rem] font-medium text-neutral-600 md:flex">
+      {
+        items.map((item) => (
+          <li>
+            <a href={item.href} class="transition-colors hover:text-ink-900">
+              {item.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <div class="flex items-center gap-3">
+      <a
+        href={LINKS.demo}
+        class="hidden rounded-full bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-700 sm:inline-block"
+      >
+        Agendar demo
+      </a>
+      <button
+        id="nav-toggle"
+        type="button"
+        aria-label="Abrir menú"
+        aria-expanded="false"
+        aria-controls="nav-mobile"
+        class="grid size-10 place-items-center rounded-lg text-ink-900 md:hidden"
+      >
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path class="nav-icon-open" d="M4 7h16M4 12h16M4 17h16"></path>
+          <path class="nav-icon-close hidden" d="M6 6l12 12M18 6L6 18"></path>
+        </svg>
+      </button>
+    </div>
+  </nav>
+
+  <div id="nav-mobile" class="hidden border-t border-neutral-200 bg-white md:hidden">
+    <ul class="space-y-1 px-5 py-4">
+      {
+        items.map((item) => (
+          <li>
+            <a
+              href={item.href}
+              class="block rounded-lg px-3 py-2.5 text-[0.95rem] font-medium text-ink-900 hover:bg-neutral-50"
+            >
+              {item.label}
+            </a>
+          </li>
+        ))
+      }
+      <li class="pt-2">
+        <a
+          href={LINKS.demo}
+          class="block rounded-full bg-brand-600 px-5 py-3 text-center text-sm font-semibold text-white"
+        >
+          Agendar demo
+        </a>
+      </li>
+    </ul>
+  </div>
+</header>
+
+<script>
+  const header = document.getElementById('site-nav')!;
+  const toggle = document.getElementById('nav-toggle')!;
+  const mobile = document.getElementById('nav-mobile')!;
+
+  const onScroll = () => {
+    header.classList.toggle('border-neutral-200', window.scrollY > 8);
+  };
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  const setOpen = (open: boolean) => {
+    mobile.classList.toggle('hidden', !open);
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.querySelector('.nav-icon-open')!.classList.toggle('hidden', open);
+    toggle.querySelector('.nav-icon-close')!.classList.toggle('hidden', !open);
+  };
+  toggle.addEventListener('click', () => setOpen(mobile.classList.contains('hidden')));
+  mobile.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setOpen(false)));
+</script>

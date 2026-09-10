@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<style>
+  @font-face {
+    font-family: 'Bricolage';
+    src: url('../node_modules/@fontsource-variable/bricolage-grotesque/files/bricolage-grotesque-latin-wght-normal.woff2') format('woff2-variations');
+    font-weight: 200 800;
+  }
+  @font-face {
+    font-family: 'InterVar';
+    src: url('../node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2') format('woff2-variations');
+    font-weight: 100 900;
+  }
+  @font-face {
+    font-family: 'PlexMono';
+    src: url('../node_modules/@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-500-normal.woff2') format('woff2');
+    font-weight: 500;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    width: 1200px;
+    height: 630px;
+    overflow: hidden;
+    background: #0f3237;
+    font-family: 'InterVar', sans-serif;
+    position: relative;
+    color: #fff;
+  }
+
+  .glow-a, .glow-b {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .glow-a {
+    width: 900px; height: 700px;
+    right: -260px; top: -280px;
+    background: radial-gradient(closest-side, rgba(53,161,98,0.28), transparent);
+  }
+  .glow-b {
+    width: 700px; height: 560px;
+    left: -220px; bottom: -260px;
+    background: radial-gradient(closest-side, rgba(217,168,63,0.10), transparent);
+  }
+
+  .wrap {
+    position: relative;
+    height: 100%;
+    padding: 64px 72px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .logo { display: flex; align-items: center; gap: 18px; }
+  .logo .name {
+    font-family: 'Bricolage';
+    font-weight: 700;
+    font-size: 44px;
+    letter-spacing: -0.02em;
+  }
+
+  h1 {
+    font-family: 'Bricolage';
+    font-weight: 700;
+    font-size: 76px;
+    line-height: 1.04;
+    letter-spacing: -0.025em;
+    max-width: 1060px;
+  }
+  h1 .accent { color: #7fd4a4; }
+
+  .bottom { display: flex; align-items: flex-end; justify-content: space-between; gap: 40px; }
+
+  .sub {
+    font-size: 30px;
+    line-height: 1.35;
+    color: rgba(255,255,255,0.82);
+    max-width: 640px;
+    font-weight: 500;
+  }
+
+  .chip {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    background: rgba(255,255,255,0.06);
+    border: 1.5px solid rgba(255,255,255,0.14);
+    border-radius: 22px;
+    padding: 26px 30px;
+    min-width: 430px;
+  }
+  .chip .head {
+    display: flex; align-items: center; gap: 12px;
+    font-weight: 700; font-size: 23px;
+    white-space: nowrap;
+  }
+  .check {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: #35a162;
+    display: grid; place-items: center;
+    flex: none;
+  }
+  .row {
+    display: flex; justify-content: space-between; gap: 28px;
+    font-family: 'PlexMono';
+    font-size: 19px;
+    white-space: nowrap;
+  }
+  .row .k { color: rgba(255,255,255,0.55); }
+  .row .v { color: #fff; }
+</style>
+</head>
+<body>
+  <div class="glow-a"></div>
+  <div class="glow-b"></div>
+
+  <div class="wrap">
+    <div class="logo">
+      <svg width="72" height="72" viewBox="0 0 64 64">
+        <defs>
+          <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#3aad69"/>
+            <stop offset="1" stop-color="#2a8a52"/>
+          </linearGradient>
+        </defs>
+        <rect width="64" height="64" rx="15" fill="url(#g)"/>
+        <path d="M32 13c10.5 0 19 7.6 19 17s-8.5 17-19 17c-2.3 0-4.5-.35-6.5-1L17 49l2.2-7.2C15.4 38.7 13 34.6 13 30c0-9.4 8.5-17 19-17z"
+              fill="none" stroke="#fff" stroke-width="3.4" stroke-linejoin="round"/>
+        <g stroke="#fff" stroke-width="4.6" stroke-linecap="round">
+          <path d="M27 22.5v15"/>
+          <path d="M37.5 22.5 27.6 30l9.9 7.5"/>
+        </g>
+      </svg>
+      <span class="name">Klokk</span>
+    </div>
+
+    <h1>Registrar la asistencia<br>no es lo mismo que <span class="accent">probarla.</span></h1>
+
+    <div class="bottom">
+      <p class="sub">Asistencia por WhatsApp con hora de servidor, ubicación y sellado NOM&#8209;151.</p>
+
+      <div class="chip">
+        <div class="head">
+          <span class="check">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4.5 12.5l5 5 10-11"/>
+            </svg>
+          </span>
+          Guardado en el expediente
+        </div>
+        <div class="row"><span class="k">Folio</span><span class="v">KLK-2027-004182</span></div>
+        <div class="row"><span class="k">Sello NOM-151</span><span class="v">constancia emitida</span></div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

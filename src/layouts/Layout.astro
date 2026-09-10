@@ -11,6 +11,9 @@ const {
   description
     = 'Tu equipo checa por WhatsApp, sin instalar nada. Klokk guarda cada registro con hora de servidor, ubicación y sellado NOM-151, en un expediente que puedes exhibir.',
 } = Astro.props;
+
+const ogImage = new URL('/og.png', Astro.site);
+const canonical = new URL(Astro.url.pathname, Astro.site);
 ---
 
 <!doctype html>
@@ -21,10 +24,21 @@ const {
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="canonical" href={canonical} />
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Klokk" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Klokk — Registrar la asistencia no es lo mismo que probarla." />
     <meta property="og:locale" content="es_MX" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
     <meta name="theme-color" content="#0f3237" />
     <script>
       // Marca que hay JS: activa los reveals progresivos.

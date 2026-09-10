@@ -21,3 +21,14 @@ npm run build    # genera dist/
 - **CTAs (WhatsApp / demo):** `src/lib/links.ts` — un solo lugar para el número real y la agenda.
 - **Copy de secciones:** cada sección es un componente en `src/components/`.
 - **Tokens de marca (colores, tipografía):** `src/styles/global.css`.
+
+## OG image (previews de WhatsApp/redes)
+
+La fuente es `og/og.html` (1200×630, usa las fuentes de `node_modules`). Para regenerar `public/og.png`:
+
+```sh
+"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless --disable-gpu \
+  --allow-file-access-from-files --hide-scrollbars --force-device-scale-factor=2 \
+  --window-size=1200,630 --screenshot=og/og-2x.png "file://$PWD/og/og.html"
+sips -z 630 1200 og/og-2x.png --out public/og.png
+```

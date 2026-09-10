@@ -62,9 +62,17 @@
   }
 }
 
+:root {
+  /* curvas compartidas — desaceleración para entradas (expo/power2 out) */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-soft: cubic-bezier(0.33, 1, 0.68, 1);
+}
+
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
+  /* permite transicionar height: auto en <details> (Chrome 129+); el resto abre sin animar */
+  interpolate-size: allow-keywords;
 }
 
 body {
@@ -77,6 +85,76 @@ body {
 ::selection {
   background: var(--color-brand-200);
   color: var(--color-ink-950);
+}
+
+/* Titular del hero: cada palabra sube desde su máscara (estilo SplitText, solo CSS) */
+.hw-mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
+}
+.hw {
+  display: inline-block;
+  transform: translateY(112%);
+  animation: hw-rise 0.85s var(--ease-out-expo) forwards;
+  animation-delay: calc(0.12s + var(--hw-i, 0) * 45ms);
+}
+@keyframes hw-rise {
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* Fondo del hero: deriva lentísima de las manchas radiales */
+.aurora {
+  animation: aurora-drift 26s ease-in-out infinite alternate;
+}
+@keyframes aurora-drift {
+  from {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  to {
+    transform: translate3d(-2.5%, 2%, 0) scale(1.06);
+  }
+}
+
+/* Acordeón FAQ: apertura suave donde el navegador lo soporta */
+details.faq-item::details-content {
+  height: 0;
+  overflow: clip;
+  transition:
+    height 0.35s var(--ease-out-soft),
+    content-visibility 0.35s allow-discrete;
+}
+details.faq-item[open]::details-content {
+  height: auto;
+}
+
+/* Elevación estándar de tarjetas/filas interactivas (transform + sombra) */
+.lift {
+  transition:
+    transform 0.25s var(--ease-out-soft),
+    box-shadow 0.25s var(--ease-out-soft);
+}
+@media (hover: hover) {
+  .lift:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-card);
+  }
+}
+
+/* Botones: feedback al presionar */
+.btn-press {
+  transition:
+    transform 0.2s var(--ease-out-soft),
+    box-shadow 0.2s var(--ease-out-soft),
+    background-color 0.2s,
+    border-color 0.2s;
+}
+.btn-press:active {
+  transform: scale(0.97);
 }
 
 /* Revelado al hacer scroll — progresivo: sin JS todo es visible */

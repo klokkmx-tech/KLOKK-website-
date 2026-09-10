@@ -30,7 +30,7 @@ const pasos = [
     <ol class="mt-12 grid gap-10 sm:grid-cols-3 sm:gap-8">
       {
         pasos.map((paso, i) => (
-          <li class="reveal border-t-2 border-ink-900 pt-6" style={`--reveal-delay: ${i * 110}ms`}>
+          <li class="paso reveal relative pt-6" style={`--reveal-delay: ${i * 110}ms`}>
             <span class="font-mono text-sm font-medium text-brand-600">{paso.n}</span>
             <h3 class="mt-2 text-lg font-bold text-ink-900">{paso.title}</h3>
             <p class="mt-2.5 text-[0.925rem] leading-relaxed text-neutral-600">{paso.body}</p>
@@ -40,3 +40,31 @@ const pasos = [
     </ol>
   </div>
 </section>
+
+<style>
+  /* La regla superior de cada paso se traza de izquierda a derecha al revelarse */
+  .paso::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--color-ink-900);
+    transform-origin: left;
+  }
+  html.js .paso::before {
+    transform: scaleX(0);
+    transition: transform 0.8s var(--ease-out-expo);
+    transition-delay: calc(var(--reveal-delay, 0ms) + 150ms);
+  }
+  html.js .paso.is-visible::before {
+    transform: scaleX(1);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html.js .paso::before {
+      transform: scaleX(1);
+      transition: none;
+    }
+  }
+</style>

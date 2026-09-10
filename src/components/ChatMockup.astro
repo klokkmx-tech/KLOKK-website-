@@ -1,80 +1,98 @@
 ---
-// Mockup animado: el empleado manda «Entrada» y Klokk responde con la
-// evidencia sellada. Ilustrativo, con datos de ejemplo.
+// Mockup animado: el empleado manda «Entrada», Klokk «escribe» y responde con
+// la evidencia sellada, fila por fila. Ilustrativo, con datos de ejemplo.
+const rows = [
+  ['Folio', 'KLK-2027-004182'],
+  ['Hora servidor', '07:58:14 CST'],
+  ['Ubicación', '20.9674, −89.5926'],
+  ['Origen', 'WhatsApp · +52 999 ••• 41'],
+  ['Sello NOM-151', 'PSC · constancia emitida'],
+];
 ---
 
 <figure class="chat-mockup relative mx-auto w-full max-w-md">
-  <div
-    class="relative overflow-hidden rounded-3xl border border-neutral-200 bg-neutral-50 shadow-float"
-  >
-    <!-- header del chat -->
-    <div class="flex items-center gap-3 border-b border-neutral-200 bg-white px-5 py-3.5">
-      <svg width="36" height="36" viewBox="0 0 64 64" aria-hidden="true" class="rounded-[23%]">
-        <rect width="64" height="64" rx="15" fill="#2f9a5c"></rect>
-        <path
-          d="M32 13c10.5 0 19 7.6 19 17s-8.5 17-19 17c-2.3 0-4.5-.35-6.5-1L17 49l2.2-7.2C15.4 38.7 13 34.6 13 30c0-9.4 8.5-17 19-17z"
-          fill="none" stroke="#fff" stroke-width="3.4" stroke-linejoin="round"></path>
-        <g stroke="#fff" stroke-width="4.6" stroke-linecap="round">
-          <path d="M27 22.5v15"></path>
-          <path d="M37.5 22.5 27.6 30l9.9 7.5"></path>
-        </g>
-      </svg>
-      <div class="leading-tight">
-        <p class="text-[0.95rem] font-semibold text-ink-900">Klokk</p>
-        <p class="flex items-center gap-1.5 text-xs text-neutral-500">
-          <span class="size-1.5 rounded-full bg-brand-500"></span> en línea
-        </p>
-      </div>
-    </div>
-
-    <div class="space-y-3 px-4 py-5 sm:px-5">
-      <!-- mensaje del empleado -->
-      <div class="msg-out flex justify-end">
-        <div class="max-w-[70%] rounded-2xl rounded-br-md bg-brand-100 px-4 py-2.5 shadow-sm">
-          <p class="text-[0.95rem] font-medium text-ink-900">Entrada</p>
-          <p class="mt-0.5 text-right font-mono text-[0.7rem] text-neutral-500">
-            07:58 <span class="text-brand-600">✓✓</span>
+  <div class="chat-float">
+    <div
+      class="relative overflow-hidden rounded-3xl border border-neutral-200 bg-neutral-50 shadow-float"
+    >
+      <!-- header del chat -->
+      <div class="flex items-center gap-3 border-b border-neutral-200 bg-white px-5 py-3.5">
+        <svg width="36" height="36" viewBox="0 0 64 64" aria-hidden="true" class="rounded-[23%]">
+          <rect width="64" height="64" rx="15" fill="#2f9a5c"></rect>
+          <path
+            d="M32 13c10.5 0 19 7.6 19 17s-8.5 17-19 17c-2.3 0-4.5-.35-6.5-1L17 49l2.2-7.2C15.4 38.7 13 34.6 13 30c0-9.4 8.5-17 19-17z"
+            fill="none" stroke="#fff" stroke-width="3.4" stroke-linejoin="round"></path>
+          <g stroke="#fff" stroke-width="4.6" stroke-linecap="round">
+            <path d="M27 22.5v15"></path>
+            <path d="M37.5 22.5 27.6 30l9.9 7.5"></path>
+          </g>
+        </svg>
+        <div class="leading-tight">
+          <p class="text-[0.95rem] font-semibold text-ink-900">Klokk</p>
+          <p class="flex items-center gap-1.5 text-xs text-neutral-500">
+            <span class="relative flex size-1.5">
+              <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand-400 opacity-60" style="animation-duration: 2.4s"></span>
+              <span class="relative inline-flex size-1.5 rounded-full bg-brand-500"></span>
+            </span>
+            en línea
           </p>
         </div>
       </div>
 
-      <!-- respuesta de Klokk -->
-      <div class="msg-in flex">
-        <div class="max-w-[85%] rounded-2xl rounded-bl-md bg-white px-4 py-2.5 shadow-sm">
-          <p class="text-[0.95rem] text-ink-900">Entrada registrada, <strong>Luis</strong>.</p>
-          <p class="mt-0.5 text-[0.85rem] text-neutral-500">Obra Norte · dentro de la geocerca</p>
-          <p class="mt-0.5 text-right font-mono text-[0.7rem] text-neutral-400">07:58</p>
+      <div class="space-y-3 px-4 py-5 sm:px-5">
+        <!-- mensaje del empleado -->
+        <div class="msg-out flex justify-end">
+          <div class="max-w-[70%] rounded-2xl rounded-br-md bg-brand-100 px-4 py-2.5 shadow-sm">
+            <p class="text-[0.95rem] font-medium text-ink-900">Entrada</p>
+            <p class="mt-0.5 text-right font-mono text-[0.7rem] text-neutral-500">
+              07:58 <span class="text-brand-600">✓✓</span>
+            </p>
+          </div>
         </div>
-      </div>
 
-      <!-- tarjeta de evidencia -->
-      <div class="evidence rounded-2xl border border-neutral-200 bg-white p-4 shadow-card sm:p-5">
-        <p class="flex items-center gap-2 text-[0.9rem] font-bold text-ink-900">
-          <span
-            class="evidence-check grid size-5 place-items-center rounded-full bg-brand-600 text-white"
-          >
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M4.5 12.5l5 5 10-11"></path>
-            </svg>
-          </span>
-          Guardado en el expediente
-        </p>
-        <dl class="mt-3.5 space-y-2.5 border-t border-neutral-100 pt-3.5">
-          {
-            [
-              ['Folio', 'KLK-2027-004182'],
-              ['Hora servidor', '07:58:14 CST'],
-              ['Ubicación', '20.9674, −89.5926'],
-              ['Origen', 'WhatsApp · +52 999 ••• 41'],
-              ['Sello NOM-151', 'PSC · constancia emitida'],
-            ].map(([k, v]) => (
-              <div class="flex items-baseline justify-between gap-4">
-                <dt class="shrink-0 text-[0.8rem] text-neutral-500">{k}</dt>
-                <dd class="text-right font-mono text-[0.8rem] font-medium text-ink-900">{v}</dd>
-              </div>
-            ))
-          }
-        </dl>
+        <!-- Klokk escribiendo… (se desvanece cuando llega la respuesta) -->
+        <div class="typing-wrap relative h-0 !mt-0">
+          <div class="typing flex w-fit items-center gap-1.5 rounded-2xl rounded-bl-md bg-white px-4 py-3 shadow-sm" aria-hidden="true">
+            <span class="typing-dot"></span>
+            <span class="typing-dot" style="animation-delay: 0.15s"></span>
+            <span class="typing-dot" style="animation-delay: 0.3s"></span>
+          </div>
+        </div>
+
+        <!-- respuesta de Klokk -->
+        <div class="msg-in flex">
+          <div class="max-w-[85%] rounded-2xl rounded-bl-md bg-white px-4 py-2.5 shadow-sm">
+            <p class="text-[0.95rem] text-ink-900">Entrada registrada, <strong>Luis</strong>.</p>
+            <p class="mt-0.5 text-[0.85rem] text-neutral-500">Obra Norte · dentro de la geocerca</p>
+            <p class="mt-0.5 text-right font-mono text-[0.7rem] text-neutral-400">07:58</p>
+          </div>
+        </div>
+
+        <!-- tarjeta de evidencia -->
+        <div class="evidence rounded-2xl border border-neutral-200 bg-white p-4 shadow-card sm:p-5">
+          <p class="flex items-center gap-2 text-[0.9rem] font-bold text-ink-900">
+            <span class="evidence-check relative grid size-5 place-items-center rounded-full bg-brand-600 text-white">
+              <span class="check-ring absolute inset-0 rounded-full border-2 border-brand-500" aria-hidden="true"></span>
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4.5 12.5l5 5 10-11"></path>
+              </svg>
+            </span>
+            Guardado en el expediente
+          </p>
+          <dl class="mt-3.5 space-y-2.5 border-t border-neutral-100 pt-3.5">
+            {
+              rows.map(([k, v], i) => (
+                <div
+                  class="evidence-row flex items-baseline justify-between gap-4"
+                  style={`animation-delay: ${2.75 + i * 0.14}s`}
+                >
+                  <dt class="shrink-0 text-[0.8rem] text-neutral-500">{k}</dt>
+                  <dd class="text-right font-mono text-[0.8rem] font-medium text-ink-900">{v}</dd>
+                </div>
+              ))
+            }
+          </dl>
+        </div>
       </div>
     </div>
   </div>
@@ -84,27 +102,75 @@
   </figcaption>
 </figure>
 
+<script>
+  // Arranca la coreografía cuando el mockup es visible (≥40%)
+  const fig = document.querySelector('.chat-mockup');
+  if (fig) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          fig.classList.add('playing');
+          io.disconnect();
+        }
+      },
+      { threshold: 0.4 },
+    );
+    io.observe(fig);
+  }
+</script>
+
 <style>
-  /* Secuencia: mensaje → respuesta → evidencia. Una sola vez, al cargar. */
+  /* Secuencia: mensaje (0.4s) → escribiendo (0.9–1.9s) → respuesta (2s)
+     → evidencia (2.5s) → filas (2.75s+) → sello (3.6s). Una vez, al cargar. */
   .msg-out,
   .msg-in,
   .evidence {
     opacity: 0;
     transform: translateY(10px) scale(0.98);
-    animation: chat-pop 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation: chat-pop 0.5s var(--ease-out-expo, cubic-bezier(0.22, 1, 0.36, 1)) forwards;
   }
   .msg-out {
     animation-delay: 0.4s;
   }
   .msg-in {
-    animation-delay: 1.1s;
+    animation-delay: 2s;
   }
   .evidence {
-    animation-delay: 1.8s;
+    animation-delay: 2.5s;
   }
+
+  /* burbuja «escribiendo…» — aparece y se desvanece sin ocupar espacio final */
+  .typing {
+    opacity: 0;
+    animation: typing-cycle 1.1s ease 0.9s forwards;
+  }
+  .typing-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 9999px;
+    background: var(--color-neutral-400);
+    animation: typing-bounce 0.9s ease-in-out 0.9s 2;
+  }
+
+  .evidence-row {
+    opacity: 0;
+    transform: translateX(6px);
+    animation: row-in 0.4s cubic-bezier(0.33, 1, 0.68, 1) forwards;
+    /* delay inline por fila */
+  }
+
   .evidence-check {
     scale: 0;
-    animation: check-stamp 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) 2.3s forwards;
+    animation: check-stamp 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) 3.6s forwards;
+  }
+  .check-ring {
+    opacity: 0;
+    animation: ring-ripple 0.7s ease-out 3.75s forwards;
+  }
+
+  /* flotación suave permanente, en un wrapper para no pelear con el pop */
+  .chat-float {
+    animation: chat-drift 7s ease-in-out 4.5s infinite;
   }
 
   @keyframes chat-pop {
@@ -113,22 +179,88 @@
       transform: translateY(0) scale(1);
     }
   }
+  @keyframes typing-cycle {
+    0% {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    18% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    82% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+  @keyframes typing-bounce {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    40% {
+      transform: translateY(-4px);
+    }
+  }
+  @keyframes row-in {
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
   @keyframes check-stamp {
     to {
       scale: 1;
     }
   }
+  @keyframes ring-ripple {
+    0% {
+      opacity: 0.8;
+      transform: scale(1);
+    }
+    100% {
+      opacity: 0;
+      transform: scale(2.2);
+    }
+  }
+  @keyframes chat-drift {
+    50% {
+      transform: translateY(-6px);
+    }
+  }
+
+  /* Con JS, la secuencia arranca hasta que el mockup entra al viewport
+     (en móvil queda bajo el pliegue). Sin JS, corre al cargar. */
+  html.js .chat-mockup:not(.playing) :is(.msg-out, .msg-in, .evidence, .evidence-row, .typing, .typing-dot, .evidence-check, .check-ring, .chat-float) {
+    animation-play-state: paused;
+  }
 
   @media (prefers-reduced-motion: reduce) {
     .msg-out,
     .msg-in,
-    .evidence {
+    .evidence,
+    .evidence-row {
       opacity: 1;
       transform: none;
       animation: none;
     }
+    .typing {
+      display: none;
+      animation: none;
+    }
+    .typing-dot {
+      animation: none;
+    }
     .evidence-check {
       scale: 1;
+      animation: none;
+    }
+    .check-ring {
+      display: none;
+    }
+    .chat-float {
       animation: none;
     }
   }

@@ -32,6 +32,13 @@ const refs = [
         radial-gradient(36rem 24rem at 0% 100%, rgb(217 168 63 / 0.07), transparent 55%);"
     >
     </div>
+    <!-- orbe que deriva lento por detrás del contenido -->
+    <div
+      aria-hidden="true"
+      class="legal-orb pointer-events-none absolute -top-24 -right-24 size-96 rounded-full opacity-50"
+      style="background: radial-gradient(circle, rgb(53 161 98 / 0.22), transparent 65%); filter: blur(24px);"
+    >
+    </div>
 
     <div class="relative grid gap-12 lg:grid-cols-[1fr_1.1fr] lg:gap-16">
       <div class="reveal">
@@ -58,7 +65,7 @@ const refs = [
         <ul class="space-y-7">
           {
             refs.map((ref, i) => (
-              <li class="reveal border-l-2 border-amber-line pl-5" style={`--reveal-delay: ${i * 90}ms`}>
+              <li class="ref-item reveal relative pl-5" style={`--reveal-delay: ${i * 90}ms`}>
                 <h3 class="font-semibold text-white">{ref.title}</h3>
                 <p class="mt-1.5 text-[0.925rem] leading-relaxed text-neutral-300">{ref.body}</p>
               </li>
@@ -73,3 +80,47 @@ const refs = [
     </div>
   </div>
 </section>
+
+<style>
+  /* La línea ámbar de cada referencia se dibuja de arriba hacia abajo al revelarse */
+  .ref-item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.15rem;
+    bottom: 0.15rem;
+    width: 2px;
+    background: var(--color-amber-line);
+    transform-origin: top;
+  }
+  html.js .ref-item::before {
+    transform: scaleY(0);
+    transition: transform 0.7s var(--ease-out-soft);
+    transition-delay: calc(var(--reveal-delay, 0ms) + 250ms);
+  }
+  html.js .ref-item.is-visible::before {
+    transform: scaleY(1);
+  }
+
+  .legal-orb {
+    animation: orb-drift 18s ease-in-out infinite alternate;
+  }
+  @keyframes orb-drift {
+    from {
+      transform: translate3d(0, 0, 0);
+    }
+    to {
+      transform: translate3d(-14rem, 10rem, 0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html.js .ref-item::before {
+      transform: scaleY(1);
+      transition: none;
+    }
+    .legal-orb {
+      animation: none;
+    }
+  }
+</style>

@@ -2,7 +2,14 @@
 import { LINKS } from '../lib/links';
 ---
 
-<section class="py-24 sm:py-32">
+<section class="relative overflow-hidden py-24 sm:py-32">
+  <div
+    aria-hidden="true"
+    class="pointer-events-none absolute inset-0 -z-10"
+    style="background: radial-gradient(38rem 22rem at 50% 60%, rgb(53 161 98 / 0.09), transparent 65%);"
+  >
+  </div>
+
   <div class="reveal mx-auto max-w-2xl px-5 text-center sm:px-8">
     <h2
       class="font-display text-3xl leading-[1.12] font-bold tracking-tight text-balance sm:text-[2.6rem]"
@@ -15,17 +22,52 @@ import { LINKS } from '../lib/links';
     </p>
     <div class="mt-9 flex flex-wrap justify-center gap-3.5">
       <a
+        id="cta-magnet"
         href={LINKS.demo}
-        class="rounded-full bg-brand-600 px-7 py-3.5 text-[0.95rem] font-semibold text-white shadow-md shadow-brand-600/25 transition hover:-translate-y-0.5 hover:bg-brand-700 hover:shadow-lg hover:shadow-brand-600/25"
+        class="btn-press rounded-full bg-brand-600 px-7 py-3.5 text-[0.95rem] font-semibold text-white shadow-md shadow-brand-600/25 transition-[background-color,box-shadow] duration-200 will-change-transform hover:bg-brand-700 hover:shadow-lg hover:shadow-brand-600/25"
       >
         Agendar demo
       </a>
       <a
         href={LINKS.whatsapp}
-        class="rounded-full border border-neutral-300 bg-white px-7 py-3.5 text-[0.95rem] font-semibold text-ink-900 transition hover:-translate-y-0.5 hover:border-neutral-400"
+        class="btn-press rounded-full border border-neutral-300 bg-white px-7 py-3.5 text-[0.95rem] font-semibold text-ink-900 transition hover:-translate-y-0.5 hover:border-neutral-400"
       >
         Escribirnos por WhatsApp
       </a>
     </div>
   </div>
 </section>
+
+<script>
+  // Botón «magnético»: sigue suavemente al puntero, con tirón acotado para no
+  // salirse de su zona de clic. Solo puntero fino y sin reduced-motion.
+  const el = document.getElementById('cta-magnet');
+  const fine = window.matchMedia('(pointer: fine)').matches;
+  const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (el && fine && !still) {
+    const zone = el.parentElement!;
+    let raf = 0;
+    let tx = 0;
+    let ty = 0;
+    const render = () => {
+      el.style.transform = `translate(${tx}px, ${ty}px)`;
+      raf = 0;
+    };
+    zone.addEventListener('pointermove', (e) => {
+      const r = el.getBoundingClientRect();
+      const dx = e.clientX - (r.left + r.width / 2);
+      const dy = e.clientY - (r.top + r.height / 2);
+      const within = Math.abs(dx) < r.width && Math.abs(dy) < r.height * 1.6;
+      tx = within ? Math.max(-6, Math.min(6, dx * 0.12)) : 0;
+      ty = within ? Math.max(-4, Math.min(4, dy * 0.12)) : 0;
+      if (!raf) raf = requestAnimationFrame(render);
+    });
+    zone.addEventListener('pointerleave', () => {
+      tx = 0;
+      ty = 0;
+      el.style.transition = 'transform 0.4s cubic-bezier(0.33, 1, 0.68, 1)';
+      el.style.transform = 'translate(0, 0)';
+      setTimeout(() => (el.style.transition = ''), 400);
+    });
+  }
+</script>

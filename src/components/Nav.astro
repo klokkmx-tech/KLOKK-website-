@@ -23,7 +23,7 @@ const items = [
       {
         items.map((item) => (
           <li>
-            <a href={item.href} class="transition-colors hover:text-ink-900">
+            <a href={item.href} data-spy={item.href.slice(1)} class="spy-link relative transition-colors hover:text-ink-900">
               {item.label}
             </a>
           </li>
@@ -99,4 +99,48 @@ const items = [
   };
   toggle.addEventListener('click', () => setOpen(mobile.classList.contains('hidden')));
   mobile.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setOpen(false)));
+
+  // Scrollspy: subraya la sección visible en el nav de escritorio
+  const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('.spy-link'));
+  const sections = links
+    .map((l) => document.getElementById(l.dataset.spy!))
+    .filter((s): s is HTMLElement => s !== null);
+  const spy = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          links.forEach((l) => l.classList.toggle('is-active', l.dataset.spy === entry.target.id));
+        }
+      }
+    },
+    { rootMargin: '-30% 0px -60% 0px' },
+  );
+  sections.forEach((s) => spy.observe(s));
 </script>
+
+<style>
+  .spy-link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -6px;
+    height: 2px;
+    border-radius: 9999px;
+    background: var(--color-brand-600);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s var(--ease-out-soft);
+  }
+  .spy-link.is-active {
+    color: var(--color-ink-900);
+  }
+  .spy-link.is-active::after {
+    transform: scaleX(1);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .spy-link::after {
+      transition: none;
+    }
+  }
+</style>

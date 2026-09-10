@@ -52,7 +52,8 @@ const construccion = [
           {
             disponibles.map((m) => (
               <li class="flex gap-5 py-5 first:pt-0">
-                <span class="mt-0.5 h-fit shrink-0 rounded-md bg-brand-100 px-2 py-1 font-mono text-[0.7rem] font-medium text-brand-700">
+                <span class="mt-0.5 flex h-fit shrink-0 items-center gap-1.5 rounded-md bg-brand-100 px-2 py-1 font-mono text-[0.7rem] font-medium text-brand-700">
+                  <span class="live-dot size-1.5 rounded-full bg-brand-600" aria-hidden="true" />
                   en vivo
                 </span>
                 <div>
@@ -93,3 +94,23 @@ const construccion = [
     </div>
   </div>
 </section>
+
+<style>
+  .live-dot {
+    animation: live-breathe 2.2s ease-in-out infinite;
+  }
+  @keyframes live-breathe {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.35;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .live-dot {
+      animation: none;
+    }
+  }
+</style>

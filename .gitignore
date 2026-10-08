@@ -26,3 +26,6 @@ og/og-2x.png
 
 # documentación interna (brief, referencias): nunca se sube
 docs/
+
+# salida del adaptador de Vercel
+.vercel/

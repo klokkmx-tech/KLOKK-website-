@@ -127,20 +127,21 @@ export async function ejecutar(entrada: Entrada, deps: Deps): Promise<Salida> {
       }
 
       case 'GENERAR_PDF': {
-        if (!registro) throw new Error('GENERAR_PDF sin registro');
+        const reg = registro;
+        if (!reg) throw new Error('GENERAR_PDF sin registro');
         const bytes = await deps.pdf({
-          folio: registro.folio,
-          evento: registro.evento,
-          ts: registro.ts,
-          lat: registro.lat,
-          lon: registro.lon,
-          hash: registro.hash_sha256,
+          folio: reg.folio,
+          evento: reg.evento,
+          ts: reg.ts,
+          lat: reg.lat,
+          lon: reg.lon,
+          hash: reg.hash_sha256,
           wa_id: lead.wa_id,
         });
-        const { media_id } = await wa.subirMedia(bytes, 'application/pdf', M3_NOMBRE_ARCHIVO(registro.folio));
-        registro = { ...registro, media_id };
-        await db.registros.actualizarMedia(registro.id, media_id, null);
-        await db.eventos.registrar(lead.id, 'PDF', { folio: registro.folio });
+        const { media_id } = await wa.subirMedia(bytes, 'application/pdf', M3_NOMBRE_ARCHIVO(reg.folio));
+        registro = { ...reg, media_id };
+        await db.registros.actualizarMedia(reg.id, media_id, null);
+        await db.eventos.registrar(lead.id, 'PDF', { folio: reg.folio });
         break;
       }
 

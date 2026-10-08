@@ -127,7 +127,7 @@ export async function ejecutar(entrada: Entrada, deps: Deps): Promise<Salida> {
       }
 
       case 'GENERAR_PDF': {
-        const reg = registro;
+        const reg: RegistroRow | null = registro;
         if (!reg) throw new Error('GENERAR_PDF sin registro');
         const bytes = await deps.pdf({
           folio: reg.folio,
@@ -139,7 +139,8 @@ export async function ejecutar(entrada: Entrada, deps: Deps): Promise<Salida> {
           wa_id: lead.wa_id,
         });
         const { media_id } = await wa.subirMedia(bytes, 'application/pdf', M3_NOMBRE_ARCHIVO(reg.folio));
-        registro = { ...reg, media_id };
+        const conMedia: RegistroRow = { ...reg, media_id };
+        registro = conMedia;
         await db.registros.actualizarMedia(reg.id, media_id, null);
         await db.eventos.registrar(lead.id, 'PDF', { folio: reg.folio });
         break;

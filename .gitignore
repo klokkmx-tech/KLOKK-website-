@@ -23,3 +23,6 @@ pnpm-debug.log*
 # jetbrains setting folder
 .idea/
 og/og-2x.png
+
+# documentación interna (brief, referencias): nunca se sube
+docs/

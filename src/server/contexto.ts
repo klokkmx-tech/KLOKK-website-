@@ -17,7 +17,7 @@ import {
   WA_VERIFY_TOKEN,
 } from 'astro:env/server';
 import { waitUntil } from '@vercel/functions';
-import { crearCorreoFake } from './correo/types';
+import { crearCorreoResend } from './correo/resend';
 import { crearDbSupabase, crearSupabase } from './db/supabase';
 import type { Deps } from './flow/executor';
 import { generarComprobante } from './pdf/comprobante';
@@ -42,16 +42,13 @@ let cache: Contexto | null = null;
 export function contexto(): Contexto {
   if (cache) return cache;
 
-  // Fase 5 reemplaza el correo falso por Resend y valida el remitente en avisos.klokk.mx.
-  void RESEND_API_KEY;
-  void CORREO_REMITENTE;
-  void CORREO_EQUIPO;
-
   const db = crearDbSupabase(crearSupabase(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY));
   const wa = crearWaClient({ token: WA_ACCESS_TOKEN, phoneNumberId: WA_PHONE_NUMBER_ID, apiVersion: WA_API_VERSION });
+  // Lanza si el remitente no está en avisos.klokk.mx (A22).
+  const correo = crearCorreoResend({ apiKey: RESEND_API_KEY, remitente: CORREO_REMITENTE, destinatarios: CORREO_EQUIPO });
 
   cache = {
-    deps: { db, wa, pdf: generarComprobante, correo: crearCorreoFake(), ahora: () => new Date(), log },
+    deps: { db, wa, pdf: generarComprobante, correo, ahora: () => new Date(), log },
     appSecret: WA_APP_SECRET,
     verifyToken: WA_VERIFY_TOKEN,
     cronSecret: CRON_SECRET,

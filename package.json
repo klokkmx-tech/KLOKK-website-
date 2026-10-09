@@ -12,7 +12,8 @@
     "astro": "astro",
     "test": "vitest run",
     "test:watch": "vitest",
-    "pdf:ejemplo": "PDF_EJEMPLO_SALIDA=./.local/ejemplo.pdf vitest run tests/pdf.test.ts"
+    "pdf:ejemplo": "PDF_EJEMPLO_SALIDA=./.local/ejemplo.pdf vitest run tests/pdf.test.ts",
+    "correo:ejemplo": "CORREO_EJEMPLO_SALIDA=./.local/resumen.html vitest run tests/correo.test.ts"
   },
   "dependencies": {
     "@astrojs/vercel": "^11.0.13",

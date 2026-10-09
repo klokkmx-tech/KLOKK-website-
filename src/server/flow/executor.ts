@@ -201,17 +201,22 @@ export async function ejecutar(entrada: Entrada, deps: Deps): Promise<Salida> {
         break;
       }
 
-      case 'CORREO_CALIFICADO':
-        await correo.calificado(lead, registro ?? (await db.registros.ultimoDeLead(lead.id)));
-        await db.eventos.registrar(lead.id, 'CORREO_CALIFICADO');
+      case 'CORREO_CALIFICADO': {
+        // Un fallo del correo no debe impedir M6 y M7: se registra y se sigue.
+        const reg = registro ?? (await db.registros.ultimoDeLead(lead.id));
+        const ok = await intentarCorreo('CORREO_CALIFICADO', () => correo.calificado(lead!, reg));
+        await db.eventos.registrar(lead.id, ok ? 'CORREO_CALIFICADO' : 'CORREO_ERROR', ok ? undefined : { tipo: 'calificado' });
         break;
+      }
 
-      case 'CORREO_AVISO_TEXTO':
-        await correo.avisoTexto(lead, 'resumen' in evento ? evento.resumen : evento.tipo);
+      case 'CORREO_AVISO_TEXTO': {
+        const ok = await intentarCorreo('CORREO_AVISO_TEXTO', () => correo.avisoTexto(lead!, 'resumen' in evento ? evento.resumen : evento.tipo));
+        // El límite de uno por hora se respeta aunque el envío falle, para no insistir contra un servicio caído.
         await db.leads.actualizar(lead.id, { ultimo_aviso_texto_ts: iso });
         lead = { ...lead, ultimo_aviso_texto_ts: iso };
-        await db.eventos.registrar(lead.id, 'CORREO_AVISO');
+        await db.eventos.registrar(lead.id, ok ? 'CORREO_AVISO' : 'CORREO_ERROR', ok ? undefined : { tipo: 'avisoTexto' });
         break;
+      }
 
       case 'REDIRIGIR':
         // Lo resuelve el endpoint /a/[token].
@@ -220,6 +225,16 @@ export async function ejecutar(entrada: Entrada, deps: Deps): Promise<Salida> {
   }
 
   return { lead, aplicado: true, registro };
+
+  async function intentarCorreo(accion: string, fn: () => Promise<void>): Promise<boolean> {
+    try {
+      await fn();
+      return true;
+    } catch (e) {
+      log('correo: error', { accion, lead: lead?.id, error: e instanceof Error ? e.message : String(e) });
+      return false;
+    }
+  }
 
   async function enviar(clave: ClaveMensaje): Promise<void> {
     const to = lead!.wa_id; // regla 9: siempre el wa_id tal como llegó

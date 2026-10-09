@@ -1,7 +1,12 @@
 ---
 import ChatMockup from './ChatMockup.astro';
+import QrDemo from './QrDemo.astro';
 import { LINKS } from '../lib/links';
 
+// DEMO-WEB-01 (brief §09): el CTA principal abre el demo por WhatsApp. En móvil
+// abre wa.me directo; en escritorio muestra además un QR junto al botón.
+// TODO(JP): textos del eyebrow, titular, párrafo, CTA principal y nota pendientes.
+// Se conservan los actuales; no se toman de la simulación.
 const headline = 'Registrar la asistencia no es lo mismo que probarla.';
 const words = headline.split(' ');
 
@@ -59,20 +64,26 @@ const bullets = [
         servidor, ubicación y sellado certificado NOM-151, <strong class="font-semibold text-ink-900">en un expediente que puedes exhibir el día que te lo pidan.</strong>
       </p>
 
-      <div class="animate-fade-up mt-8 flex flex-wrap gap-3.5" style="animation-delay: 0.55s">
+      <div class="animate-fade-up mt-8 flex flex-wrap items-center gap-3.5" style="animation-delay: 0.55s">
+        <a
+          href={LINKS.demoWhatsApp}
+          class="btn-press rounded-full bg-brand-600 px-7 py-3.5 text-[0.95rem] font-semibold text-white shadow-md shadow-brand-600/25 transition hover:-translate-y-0.5 hover:bg-brand-700 hover:shadow-lg hover:shadow-brand-600/25"
+        >
+          Probar el demo en WhatsApp
+        </a>
+        <QrDemo />
         <a
           href={LINKS.demo}
-          class="btn-press rounded-full bg-brand-600 px-7 py-3.5 text-[0.95rem] font-semibold text-white shadow-md shadow-brand-600/25 transition hover:-translate-y-0.5 hover:bg-brand-700 hover:shadow-lg hover:shadow-brand-600/25"
+          class="btn-press rounded-full border border-neutral-300 bg-white px-7 py-3.5 text-[0.95rem] font-semibold text-ink-900 transition hover:-translate-y-0.5 hover:border-neutral-400"
         >
           Agendar demo de 20 min
         </a>
-        <a
-          href={LINKS.whatsapp}
-          class="btn-press rounded-full border border-neutral-300 bg-white px-7 py-3.5 text-[0.95rem] font-semibold text-ink-900 transition hover:-translate-y-0.5 hover:border-neutral-400"
-        >
-          Escribirnos por WhatsApp
-        </a>
       </div>
+
+      <p class="animate-fade-up mt-4 max-w-xl text-[0.85rem] leading-relaxed text-neutral-500" style="animation-delay: 0.6s">
+        Demo automático de dos minutos. Solo usamos tu número y la ubicación que compartas.
+        <a href="/privacidad-demo" class="underline underline-offset-4 hover:text-ink-900">Aviso de privacidad</a>.
+      </p>
 
       <ul
         class="animate-fade-up mt-9 flex flex-wrap gap-x-7 gap-y-2.5 text-[0.9rem] text-neutral-600"

@@ -20,7 +20,7 @@ import { waitUntil } from '@vercel/functions';
 import { crearCorreoFake } from './correo/types';
 import { crearDbSupabase, crearSupabase } from './db/supabase';
 import type { Deps } from './flow/executor';
-import { generarPdfPendiente } from './pdf/comprobante';
+import { generarComprobante } from './pdf/comprobante';
 import { crearWaClient } from './wa/client';
 
 export interface Contexto {
@@ -51,7 +51,7 @@ export function contexto(): Contexto {
   const wa = crearWaClient({ token: WA_ACCESS_TOKEN, phoneNumberId: WA_PHONE_NUMBER_ID, apiVersion: WA_API_VERSION });
 
   cache = {
-    deps: { db, wa, pdf: generarPdfPendiente, correo: crearCorreoFake(), ahora: () => new Date(), log },
+    deps: { db, wa, pdf: generarComprobante, correo: crearCorreoFake(), ahora: () => new Date(), log },
     appSecret: WA_APP_SECRET,
     verifyToken: WA_VERIFY_TOKEN,
     cronSecret: CRON_SECRET,

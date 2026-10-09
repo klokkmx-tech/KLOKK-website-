@@ -11,7 +11,8 @@
     "preview": "astro preview",
     "astro": "astro",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "pdf:ejemplo": "PDF_EJEMPLO_SALIDA=./.local/ejemplo.pdf vitest run tests/pdf.test.ts"
   },
   "dependencies": {
     "@astrojs/vercel": "^11.0.13",
@@ -22,6 +23,7 @@
     "@tailwindcss/vite": "^4.3.3",
     "@vercel/functions": "^3.9.11",
     "astro": "^7.3.2",
+    "pdf-lib": "^1.17.1",
     "tailwindcss": "^4.3.3",
     "zod": "^4.6.5"
   },
@@ -31,6 +33,7 @@
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
     "@types/node": "^26.6.4",
+    "pdf-parse": "^2.4.5",
     "typescript": "^6.0.3",
     "vitest": "^5.0.3"
   }

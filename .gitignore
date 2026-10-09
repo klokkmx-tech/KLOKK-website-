@@ -29,3 +29,6 @@ docs/
 
 # salida del adaptador de Vercel
 .vercel/
+
+# salidas locales (muestras de PDF, etc.)
+.local/

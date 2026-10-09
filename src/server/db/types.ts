@@ -94,6 +94,21 @@ export interface PlantillaProgramadaRow {
   motivo: string | null;
 }
 
+export interface EventoRow {
+  id: number;
+  lead_id: string | null;
+  tipo: string;
+  detalle: unknown;
+  ts: string;
+}
+
+export interface TotalesLeads {
+  leads: number;
+  calificados: number;
+  agendados: number;
+  bajas: number;
+}
+
 export interface Db {
   leads: {
     porWaId(wa_id: string): Promise<LeadRow | null>;
@@ -103,6 +118,10 @@ export interface Db {
     /** Atómica: solo cambia si el estado actual es `esperado`. */
     transicionar(id: string, esperado: Estado, nuevo: Estado): Promise<boolean>;
     actualizar(id: string, patch: PatchLead): Promise<void>;
+    porIds(ids: string[]): Promise<LeadRow[]>;
+    /** Leads en ESPERA_UBIC desde antes de `limiteISO` y sin recordatorio enviado. */
+    enEsperaUbicSinRecordatorio(limiteISO: string): Promise<LeadRow[]>;
+    totales(): Promise<TotalesLeads>;
   };
   mensajes: {
     /** Inserta primero; si el meta_msg_id ya existe, devuelve duplicado. */
@@ -110,6 +129,7 @@ export interface Db {
     vincularLead(mensaje_id: number, lead_id: string): Promise<void>;
     insertarSaliente(m: MensajeSaliente): Promise<{ id: number }>;
     actualizarEstatus(meta_msg_id: string, estatus: string, estatus_ts: string, error: unknown): Promise<boolean>;
+    salientesEnRango(desdeISO: string, hastaISO: string): Promise<Array<Pick<MensajeRow, 'lead_id' | 'clave' | 'estatus' | 'error'>>>;
   };
   registros: {
     /** Consecutivo del día (fecha AAAA-MM-DD en Mérida), atómico. */
@@ -122,8 +142,18 @@ export interface Db {
     programar(items: Array<{ lead_id: string; plantilla: ClavePlantilla; programado_para: string }>): Promise<void>;
     /** Devuelve cuántas pendientes se cancelaron. */
     cancelarPendientes(lead_id: string, motivo: string): Promise<number>;
+    /** Pendientes con programado_para ≤ ahora, en orden de fecha. */
+    vencidas(ahoraISO: string): Promise<PlantillaProgramadaRow[]>;
+    marcar(
+      id: number,
+      estado: 'enviada' | 'cancelada' | 'fallida',
+      extra: { enviado_ts?: string; mensaje_id?: number; motivo?: string },
+    ): Promise<void>;
+    /** Cuántas pendientes hay con programado_para ≤ hastaISO. */
+    pendientesHasta(hastaISO: string): Promise<number>;
   };
   eventos: {
     registrar(lead_id: string | null, tipo: string, detalle?: unknown): Promise<void>;
+    enRango(desdeISO: string, hastaISO: string): Promise<EventoRow[]>;
   };
 }

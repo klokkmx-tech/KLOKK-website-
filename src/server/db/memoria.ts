@@ -4,19 +4,12 @@
 import type { Estado } from '../flow/types';
 import type {
   Db,
+  EventoRow,
   LeadRow,
   MensajeRow,
   PlantillaProgramadaRow,
   RegistroRow,
 } from './types';
-
-export interface EventoRow {
-  id: number;
-  lead_id: string | null;
-  tipo: string;
-  detalle: unknown;
-  ts: string;
-}
 
 export interface DbMemoria extends Db {
   tablas: {
@@ -89,6 +82,20 @@ export function crearDbMemoria(ahora: () => Date = () => new Date()): DbMemoria 
         if (!l) throw new Error('lead inexistente');
         Object.assign(l, patch);
       },
+      async porIds(ids) {
+        return clon(t.leads.filter((l) => ids.includes(l.id)));
+      },
+      async enEsperaUbicSinRecordatorio(limiteISO) {
+        return clon(t.leads.filter((l) => l.estado === 'ESPERA_UBIC' && l.estado_ts <= limiteISO && !l.recordatorio_ubic_ts));
+      },
+      async totales() {
+        return {
+          leads: t.leads.length,
+          calificados: t.leads.filter((l) => l.tamano && l.giro).length,
+          agendados: t.leads.filter((l) => l.agenda_ts).length,
+          bajas: t.leads.filter((l) => l.baja_ts).length,
+        };
+      },
     },
     mensajes: {
       async insertarEntrante(m) {
@@ -140,6 +147,11 @@ export function crearDbMemoria(ahora: () => Date = () => new Date()): DbMemoria 
         m.estatus_ts = estatus_ts;
         m.error = error ?? null;
         return true;
+      },
+      async salientesEnRango(desdeISO, hastaISO) {
+        return t.mensajes
+          .filter((m) => m.direccion === 'out' && m.ts > desdeISO && m.ts <= hastaISO)
+          .map(({ lead_id, clave, estatus, error }) => ({ lead_id, clave, estatus, error }));
       },
     },
     registros: {
@@ -197,10 +209,31 @@ export function crearDbMemoria(ahora: () => Date = () => new Date()): DbMemoria 
         }
         return n;
       },
+      async vencidas(ahoraISO) {
+        return clon(
+          t.plantillas
+            .filter((p) => p.estado === 'pendiente' && p.programado_para <= ahoraISO)
+            .sort((a, b) => a.programado_para.localeCompare(b.programado_para)),
+        );
+      },
+      async marcar(id, estado, extra) {
+        const p = t.plantillas.find((x) => x.id === id);
+        if (!p) throw new Error('plantilla inexistente');
+        p.estado = estado;
+        if (extra.enviado_ts !== undefined) p.enviado_ts = extra.enviado_ts;
+        if (extra.mensaje_id !== undefined) p.mensaje_id = extra.mensaje_id;
+        if (extra.motivo !== undefined) p.motivo = extra.motivo;
+      },
+      async pendientesHasta(hastaISO) {
+        return t.plantillas.filter((p) => p.estado === 'pendiente' && p.programado_para <= hastaISO).length;
+      },
     },
     eventos: {
       async registrar(lead_id, tipo, detalle) {
         t.eventos.push({ id: ++ids, lead_id, tipo, detalle: detalle ?? null, ts: iso() });
+      },
+      async enRango(desdeISO, hastaISO) {
+        return clon(t.eventos.filter((e) => e.ts > desdeISO && e.ts <= hastaISO));
       },
     },
   };

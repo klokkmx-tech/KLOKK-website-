@@ -13,7 +13,9 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "pdf:ejemplo": "PDF_EJEMPLO_SALIDA=./.local/ejemplo.pdf vitest run tests/pdf.test.ts",
-    "correo:ejemplo": "CORREO_EJEMPLO_SALIDA=./.local/resumen.html vitest run tests/correo.test.ts"
+    "correo:ejemplo": "CORREO_EJEMPLO_SALIDA=./.local/resumen.html vitest run tests/correo.test.ts",
+    "entorno": "node --env-file-if-exists=.env scripts/entorno.ts",
+    "aceptacion": "astro build && vitest run"
   },
   "dependencies": {
     "@astrojs/vercel": "^11.0.13",

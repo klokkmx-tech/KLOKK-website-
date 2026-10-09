@@ -32,3 +32,6 @@ docs/
 
 # salidas locales (muestras de PDF, etc.)
 .local/
+
+# configuración local del panel de Claude
+.claude/

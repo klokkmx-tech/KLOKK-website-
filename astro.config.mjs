@@ -14,6 +14,9 @@ export default defineConfig({
   // `export const prerender = false` y corren como funciones de Vercel.
   adapter: vercel(),
 
+  // El panel de vista previa asigna un puerto libre por PORT cuando 4321 está ocupado.
+  server: { port: Number(process.env.PORT) || 4321 },
+
   env: {
     // Variables del demo (brief §09). Las de servidor van como `secret`:
     // se leen y validan en runtime, nunca se incrustan en el build y el build

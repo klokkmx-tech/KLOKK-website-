@@ -23,3 +23,15 @@ pnpm-debug.log*
 # jetbrains setting folder
 .idea/
 og/og-2x.png
+
+# documentación interna (brief, referencias): nunca se sube
+docs/
+
+# salida del adaptador de Vercel
+.vercel/
+
+# salidas locales (muestras de PDF, etc.)
+.local/
+
+# configuración local del panel de Claude
+.claude/

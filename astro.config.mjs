@@ -42,6 +42,32 @@ export default defineConfig({
   },
 
   vite: {
-    plugins: [tailwindcss()]
+    plugins: [tailwindcss(), sinRolldownEnRuntime()]
   }
 });
+
+/**
+ * @astrojs/vercel 11.0.13 importa `rolldown` (herramienta de build) desde su
+ * entrypoint de servidor y deja un `import "rolldown"` suelto en la función.
+ * En Vercel esa dependencia viaja sin su binario nativo y la función muere al
+ * arrancar («Cannot find native binding»). Se sustituye por un módulo vacío solo
+ * dentro del bundle; el uso de rolldown en el build del adaptador no pasa por Vite.
+ * TODO: quitar cuando el adaptador declare `sideEffects: false` o separe el módulo.
+ */
+/** @returns {import('vite').Plugin} */
+function sinRolldownEnRuntime() {
+  const VIRTUAL = '\0klokk:rolldown-vacio';
+  return {
+    name: 'klokk-sin-rolldown-en-runtime',
+    enforce: 'pre',
+    /** @param {string} source @param {string | undefined} importer */
+    resolveId(source, importer) {
+      if (source === 'rolldown' && importer?.includes('@astrojs/vercel')) return VIRTUAL;
+      return null;
+    },
+    /** @param {string} id */
+    load(id) {
+      return id === VIRTUAL ? 'export const rolldown = undefined;' : null;
+    },
+  };
+}

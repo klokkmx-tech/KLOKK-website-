@@ -44,6 +44,53 @@
   line-gap-override: 0%;
 }
 
+/* Respaldo de Inter con métricas ajustadas (mismo método que Bricolage):
+   fontTools sobre inter-latin-wght-normal.woff2 (upm 2048, ascent .96875,
+   descent .2412, gap 0) contra Arial / Arial Bold, con los textos del hero
+   (párrafo, bullets, nota, CTAs, eyebrow). Un bloque por peso usado:
+   400 → Arial 106.24 %, 500 → Arial 107.26 %, 600 → Arial Bold 101.11 %,
+   700 → Arial Bold 102.05 %. override = métrica de Inter / size-adjust. */
+@font-face {
+  font-family: 'Inter Fallback';
+  src: local('Arial'), local('ArialMT'), local('Liberation Sans'), local('LiberationSans');
+  font-weight: 100 449;
+  font-style: normal;
+  size-adjust: 106.24%;
+  ascent-override: 91.18%;
+  descent-override: 22.7%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Inter Fallback';
+  src: local('Arial'), local('ArialMT'), local('Liberation Sans'), local('LiberationSans');
+  font-weight: 450 549;
+  font-style: normal;
+  size-adjust: 107.26%;
+  ascent-override: 90.32%;
+  descent-override: 22.49%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Inter Fallback';
+  src: local('Arial Bold'), local('Arial-BoldMT'), local('Liberation Sans Bold'), local('LiberationSans-Bold');
+  font-weight: 550 649;
+  font-style: normal;
+  size-adjust: 101.11%;
+  ascent-override: 95.81%;
+  descent-override: 23.86%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Inter Fallback';
+  src: local('Arial Bold'), local('Arial-BoldMT'), local('Liberation Sans Bold'), local('LiberationSans-Bold');
+  font-weight: 650 900;
+  font-style: normal;
+  size-adjust: 102.05%;
+  ascent-override: 94.93%;
+  descent-override: 23.64%;
+  line-gap-override: 0%;
+}
+
 @theme {
   /* ── Marca Klokk ─────────────────────────────── */
   --color-brand-50: #eef8f1;
@@ -80,7 +127,7 @@
 
   /* Tipografía */
   --font-display: 'Bricolage Grotesque Variable', 'Bricolage Fallback', ui-sans-serif, system-ui, sans-serif;
-  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Inter Variable', 'Inter Fallback', ui-sans-serif, system-ui, sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', monospace;
 
   /* Sombra de tarjeta suave (evidencia, mockups) */

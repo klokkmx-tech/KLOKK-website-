@@ -7,11 +7,16 @@
  *   al arrancar y se quita al terminar.
  * - prefers-reduced-motion, APERTURA.habilitada=false o arranque tardío →
  *   estado final inmediato.
+ * - Solo corre si el logo está visible: debajo de `lg` el contenedor del
+ *   logo está oculto (display:none) y la apertura se salta sin cargar GSAP;
+ *   el logo queda en estado final por si la ventana se agranda después.
+ * - GSAP se carga con import() dinámico solo cuando de verdad se va a animar.
  * - Idempotente: marca `data-apertura` en el <svg> (también apaga la red de
  *   seguridad CSS de Logo.astro).
  */
-import gsap from 'gsap';
 import { APERTURA } from './hero-apertura.config';
+
+type Gsap = typeof import('gsap').default;
 
 export { APERTURA };
 
@@ -31,21 +36,28 @@ function capas(svg: SVGSVGElement) {
   return { fondo, burbuja, palo, brazo, palomita };
 }
 
-/** Deja el logo completo, sin estilos de animación. */
-function estadoFinal(svg: SVGSVGElement) {
+/** Deja el logo completo, sin estilos de animación (no requiere GSAP). */
+function estadoFinal(svg: SVGSVGElement, gsap?: Gsap) {
   svg.dataset.apertura = 'fin';
   const todas = svg.querySelectorAll<SVGElement>('[data-capa]');
-  gsap.set(todas, {
-    clearProps: 'opacity,transform,strokeDasharray,strokeDashoffset,willChange',
-  });
-  gsap.set(svg, { clearProps: 'transform,willChange' });
+  if (gsap) {
+    gsap.set(todas, {
+      clearProps: 'opacity,transform,strokeDasharray,strokeDashoffset,willChange',
+    });
+    gsap.set(svg, { clearProps: 'transform,willChange' });
+  }
+  for (const el of todas) {
+    for (const prop of ['opacity', 'stroke-dasharray', 'stroke-dashoffset', 'will-change']) {
+      el.style.removeProperty(prop);
+    }
+  }
   // Aviso para otros scripts (p. ej. hero-mouse) de que el logo ya está quieto.
   svg.dispatchEvent(new CustomEvent('klokk:apertura-fin', { bubbles: true }));
 }
 
-function animar(svg: SVGSVGElement) {
+function animar(svg: SVGSVGElement, gsap: Gsap) {
   const c = capas(svg);
-  if (!c) return estadoFinal(svg);
+  if (!c) return estadoFinal(svg, gsap);
   svg.dataset.apertura = 'corriendo';
 
   const { fondo, burbuja, palo, brazo, palomita } = c;
@@ -64,7 +76,7 @@ function animar(svg: SVGSVGElement) {
     onComplete: () => {
       gsap.set([fondo, burbuja, ...trazos, svg], { clearProps: 'willChange' });
       // Sin restos inline: el logo queda como si nunca se hubiera animado.
-      estadoFinal(svg);
+      estadoFinal(svg, gsap);
     },
   });
 
@@ -97,12 +109,25 @@ function animar(svg: SVGSVGElement) {
   tl.to(svg, { scale: 1, duration: s(A.pop.regreso), ease: A.pop.easeRegreso });
 }
 
-function iniciar(svg: SVGSVGElement) {
+const debeSaltarse = () =>
+  !APERTURA.habilitada ||
+  window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
+  performance.now() > APERTURA.limiteInicio;
+
+async function iniciar(svg: SVGSVGElement) {
   if (svg.dataset.apertura) return; // ya corrió (o está corriendo)
-  const reducido = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const tarde = performance.now() > APERTURA.limiteInicio;
-  if (!APERTURA.habilitada || reducido || tarde) return estadoFinal(svg);
-  animar(svg);
+  // Oculto (contenedor `hidden` debajo de lg): no se gasta nada en animarlo.
+  const visible = svg.getClientRects().length > 0;
+  if (!visible || debeSaltarse()) return estadoFinal(svg);
+  svg.dataset.apertura = 'cargando'; // apaga la red de seguridad CSS
+  try {
+    const { default: gsap } = await import('gsap');
+    // Si la descarga tardó demasiado, mejor mostrar el logo ya completo.
+    if (debeSaltarse()) return estadoFinal(svg, gsap);
+    animar(svg, gsap);
+  } catch {
+    estadoFinal(svg);
+  }
 }
 
 function montar() {

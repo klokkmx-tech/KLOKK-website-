@@ -21,7 +21,7 @@ const bullets = [
 ];
 ---
 
-<section class="hero relative overflow-hidden pt-24 pb-16 sm:pt-36 sm:pb-24" style={fadeVars}>
+<section class="hero relative overflow-hidden pt-20 pb-16 sm:pt-36 sm:pb-24" style={fadeVars}>
   <!-- fondo con deriva lenta. top/bottom en px (no %): con -inset-[10%] su
        arranque dependía del alto de la sección y cualquier cambio de alto (p. ej.
        al cargar las fuentes) se contaba como layout shift. -->
@@ -34,7 +34,7 @@ const bullets = [
   >
   </div>
 
-  <div class="mx-auto grid max-w-6xl items-center gap-6 px-5 sm:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10">
+  <div class="mx-auto grid max-w-6xl items-center gap-14 px-5 sm:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10">
     <div>
       <p
         class="hero-in inline-flex flex-wrap items-center gap-x-2.5 gap-y-1 rounded-full border border-neutral-200 bg-white py-1.5 pr-4 pl-3 text-[0.8rem] shadow-sm"
@@ -49,13 +49,13 @@ const bullets = [
       </h1>
 
       <p
-        class="hero-in mt-6 max-w-xl text-lg leading-relaxed text-neutral-600"
+        class="hero-in mt-5 max-w-xl text-lg sm:mt-6 leading-relaxed text-neutral-600"
       >
         Tu equipo checa desde WhatsApp, sin instalar nada. Klokk guarda cada registro con hora de
         servidor, ubicación y sellado certificado NOM-151, <strong class="font-semibold text-ink-900">en un expediente que puedes exhibir el día que te lo pidan.</strong>
       </p>
 
-      <div class="hero-in mt-8 flex flex-wrap items-center gap-3.5">
+      <div class="hero-in mt-6 flex flex-wrap items-center gap-3.5 sm:mt-8">
         <a
           href={LINKS.demoWhatsApp}
           class="btn-press btn-check rounded-full bg-brand-600 px-7 py-3.5 text-[0.95rem] font-semibold text-white shadow-md shadow-brand-600/25 transition hover:-translate-y-0.5 hover:bg-brand-700 hover:shadow-lg hover:shadow-brand-600/25"
@@ -95,10 +95,11 @@ const bullets = [
     <!-- Logo grande con apertura. El contenedor externo da la perspectiva; el
          elemento [data-hero-logo] reserva el espacio (cuadrado, ancho fijo) y es
          el que inclina hero-mouse.ts. El pop de la apertura va en el <svg>.
-         En móvil/tablet (< lg) va ARRIBA del texto y chico (136/200 px) para que la
-         apertura se vea en el primer viewport; en lg vuelve a la derecha (380 px). -->
-    <div class="order-first flex justify-center [perspective:900px] lg:order-none lg:justify-end lg:pr-6">
-      <div data-hero-logo class="aspect-square w-[136px] sm:w-[200px] lg:w-[380px]">
+         Solo en escritorio (lg): debajo de lg el contenedor es display:none (no
+         reserva espacio) para que el CTA quepa sobre el pliegue con las barras
+         del navegador, y hero-apertura.ts se salta la animación sin cargar GSAP. -->
+    <div class="hidden justify-end [perspective:900px] lg:flex lg:pr-6">
+      <div data-hero-logo class="aspect-square w-[380px]">
         <Logo
           id="hero-logo"
           animated

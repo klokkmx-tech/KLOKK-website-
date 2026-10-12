@@ -1,14 +1,18 @@
 ---
-import ChatMockup from './ChatMockup.astro';
+import Logo from './Logo.astro';
 import QrDemo from './QrDemo.astro';
 import { LINKS } from '../lib/links';
+import { APERTURA } from '../scripts/hero-apertura.config';
 
 // DEMO-WEB-01 (brief §09): el CTA principal abre el demo por WhatsApp. En móvil
 // abre wa.me directo; en escritorio muestra además un QR junto al botón.
 // TODO(JP): textos del eyebrow, titular, párrafo, CTA principal y nota pendientes.
 // Se conservan los actuales; no se toman de la simulación.
 const headline = 'Registrar la asistencia no es lo mismo que probarla.';
-const words = headline.split(' ');
+
+// Fade-in del texto en paralelo con la apertura del logo (0–600 ms). Los
+// valores salen de APERTURA para que haya una sola fuente de tiempos.
+const fadeVars = `--hero-in-dur:${APERTURA.texto.duracion}ms;--hero-in-y:${APERTURA.texto.desplazamientoPx}px;--hero-in-from:${APERTURA.texto.opacidadInicial}`;
 
 const bullets = [
   'Desde 25 empleados, sin tope',
@@ -17,7 +21,7 @@ const bullets = [
 ];
 ---
 
-<section class="relative overflow-hidden pt-28 pb-16 sm:pt-36 sm:pb-24">
+<section class="hero relative overflow-hidden pt-28 pb-16 sm:pt-36 sm:pb-24" style={fadeVars}>
   <!-- fondo con deriva lenta -->
   <div
     aria-hidden="true"
@@ -31,43 +35,28 @@ const bullets = [
   <div class="mx-auto grid max-w-6xl items-center gap-14 px-5 sm:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10">
     <div>
       <p
-        class="animate-fade-up inline-flex flex-wrap items-center gap-x-2.5 gap-y-1 rounded-full border border-neutral-200 bg-white py-1.5 pr-4 pl-3 text-[0.8rem] shadow-sm"
+        class="hero-in inline-flex flex-wrap items-center gap-x-2.5 gap-y-1 rounded-full border border-neutral-200 bg-white py-1.5 pr-4 pl-3 text-[0.8rem] shadow-sm"
       >
         <span class="size-2 rounded-full bg-brand-500"></span>
         <span class="font-medium text-ink-900">Registro de Asistencia por WhatsApp</span>
         <span class="font-semibold text-neutral-500">· LFT Art. 132, Fr. XXXIV</span>
       </p>
 
-      <h1
-        class="font-display mt-6 text-[2.6rem] leading-[1.05] font-bold tracking-tight sm:text-6xl"
-        aria-label={headline}
-      >
-        {
-          words.map((word, i) => (
-            <>
-              <span class="hw-mask" aria-hidden="true">
-                <span class="hw" style={`--hw-i: ${i}`}>
-                  {word}
-                </span>
-              </span>
-              {i < words.length - 1 && ' '}
-            </>
-          ))
-        }
+      <h1 class="hero-in font-display mt-6 text-[2.6rem] leading-[1.05] font-bold tracking-tight sm:text-6xl">
+        {headline}
       </h1>
 
       <p
-        class="animate-fade-up mt-6 max-w-xl text-lg leading-relaxed text-neutral-600"
-        style="animation-delay: 0.45s"
+        class="hero-in mt-6 max-w-xl text-lg leading-relaxed text-neutral-600"
       >
         Tu equipo checa desde WhatsApp, sin instalar nada. Klokk guarda cada registro con hora de
         servidor, ubicación y sellado certificado NOM-151, <strong class="font-semibold text-ink-900">en un expediente que puedes exhibir el día que te lo pidan.</strong>
       </p>
 
-      <div class="animate-fade-up mt-8 flex flex-wrap items-center gap-3.5" style="animation-delay: 0.55s">
+      <div class="hero-in mt-8 flex flex-wrap items-center gap-3.5">
         <a
           href={LINKS.demoWhatsApp}
-          class="btn-press rounded-full bg-brand-600 px-7 py-3.5 text-[0.95rem] font-semibold text-white shadow-md shadow-brand-600/25 transition hover:-translate-y-0.5 hover:bg-brand-700 hover:shadow-lg hover:shadow-brand-600/25"
+          class="btn-press btn-check rounded-full bg-brand-600 px-7 py-3.5 text-[0.95rem] font-semibold text-white shadow-md shadow-brand-600/25 transition hover:-translate-y-0.5 hover:bg-brand-700 hover:shadow-lg hover:shadow-brand-600/25"
         >
           Probar el demo en WhatsApp
         </a>
@@ -80,14 +69,13 @@ const bullets = [
         </a>
       </div>
 
-      <p class="animate-fade-up mt-4 max-w-xl text-[0.85rem] leading-relaxed text-neutral-500" style="animation-delay: 0.6s">
+      <p class="hero-in mt-4 max-w-xl text-[0.85rem] leading-relaxed text-neutral-500">
         Demo automático de dos minutos. Solo usamos tu número y la ubicación que compartas.
         <a href="/privacidad-demo" class="underline underline-offset-4 hover:text-ink-900">Aviso de privacidad</a>.
       </p>
 
       <ul
-        class="animate-fade-up mt-9 flex flex-wrap gap-x-7 gap-y-2.5 text-[0.9rem] text-neutral-600"
-        style="animation-delay: 0.65s"
+        class="hero-in mt-9 flex flex-wrap gap-x-7 gap-y-2.5 text-[0.9rem] text-neutral-600"
       >
         {
           bullets.map((b) => (
@@ -102,8 +90,46 @@ const bullets = [
       </ul>
     </div>
 
-    <div class="animate-fade-up" style="animation-delay: 0.35s">
-      <ChatMockup />
+    <!-- Logo grande con apertura. El contenedor externo da la perspectiva; el
+         elemento [data-hero-logo] reserva el espacio (cuadrado, ancho fijo) y es
+         el que inclina hero-mouse.ts. El pop de la apertura va en el <svg>. -->
+    <div class="flex justify-center [perspective:900px] lg:justify-end lg:pr-6">
+      <div data-hero-logo class="aspect-square w-[200px] sm:w-[280px] lg:w-[380px]">
+        <Logo
+          id="hero-logo"
+          animated
+          wordmark={false}
+          size={380}
+          class="block size-full"
+          svgClass="block size-full drop-shadow-[0_24px_40px_rgb(10_36_41/0.18)]"
+        />
+      </div>
     </div>
   </div>
 </section>
+
+<style>
+  /* Texto del hero: visible desde el primer frame (opacidad inicial > 0) y
+     completo a los 600 ms, en paralelo con la apertura del logo. Sin delays. */
+  .hero-in {
+    animation: hero-in var(--hero-in-dur, 600ms) cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  @keyframes hero-in {
+    from {
+      opacity: var(--hero-in-from, 0.35);
+      transform: translateY(var(--hero-in-y, 8px));
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-in {
+      animation: none;
+    }
+  }
+</style>
+
+<script src="../scripts/hero-apertura.ts"></script>
+<script src="../scripts/hero-mouse.ts"></script>

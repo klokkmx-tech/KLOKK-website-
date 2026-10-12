@@ -1,36 +1,106 @@
 ---
+/**
+ * Logo de Klokk (fuente: public/logo.svg). SVG inline para que los scripts
+ * puedan animar sus capas.
+ *
+ * Interfaz acordada con la animación del hero (docs/HERO-ANIMATION.md):
+ * - Cada capa lleva `data-capa="fondo|burbuja|palo|brazo|palomita"`; los
+ *   scripts seleccionan con `[data-capa="…"]` dentro del contenedor.
+ * - Si se pasa `id`, las capas reciben `${id}-fondo`, `${id}-burbuja`, etc.
+ *   Sin `id` no se emiten ids (Nav y Footer conviven en la misma página).
+ * - `animated`: las capas arrancan ocultas (opacity:0 inline) para que
+ *   src/scripts/hero-apertura.ts las revele. Sin JS (<noscript>) o con
+ *   prefers-reduced-motion se ven completas desde el primer frame.
+ */
 interface Props {
   class?: string;
+  /** Lado del SVG en px (width/height). */
   size?: number;
+  /** Prefijo de ids de capa. */
+  id?: string;
+  /** Capas ocultas al inicio, para la apertura del hero. */
+  animated?: boolean;
+  /** Muestra el texto «Klokk» junto al símbolo (Nav, Footer). */
+  wordmark?: boolean;
+  /** Oculta el SVG a lectores de pantalla. */
+  decorative?: boolean;
+  /** Clases extra para el <svg>. */
+  svgClass?: string;
 }
-const { class: className = '', size = 34 } = Astro.props;
+
+const {
+  class: className = '',
+  size = 34,
+  id,
+  animated = false,
+  wordmark = true,
+  decorative = false,
+  svgClass = 'shrink-0 rounded-[25%] shadow-sm',
+} = Astro.props;
+
+const capaId = (capa: string) => (id ? `${id}-${capa}` : undefined);
+// Estado inicial de la apertura: opacity (no display) para no mover layout.
+const oculto = animated ? 'opacity:0' : undefined;
 ---
 
-<span class={`inline-flex items-center gap-2.5 ${className}`}>
+<span class={wordmark ? `inline-flex items-center gap-2.5 ${className}` : className}>
   <svg
     width={size}
     height={size}
-    viewBox="0 0 64 64"
-    aria-hidden="true"
-    class="shrink-0 rounded-[23%] shadow-sm"
+    viewBox="64 64 896 896"
+    xmlns="http://www.w3.org/2000/svg"
+    class={svgClass}
+    data-klokk-logo
+    data-animated={animated ? '' : undefined}
+    role={decorative ? undefined : 'img'}
+    aria-label={decorative ? undefined : 'Klokk'}
+    aria-hidden={decorative ? 'true' : undefined}
   >
-    <defs>
-      <linearGradient id="klokk-g" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0" stop-color="#3aad69"></stop>
-        <stop offset="1" stop-color="#2a8a52"></stop>
-      </linearGradient>
-    </defs>
-    <rect width="64" height="64" rx="15" fill="url(#klokk-g)"></rect>
-    <path
-      d="M32 13c10.5 0 19 7.6 19 17s-8.5 17-19 17c-2.3 0-4.5-.35-6.5-1L17 49l2.2-7.2C15.4 38.7 13 34.6 13 30c0-9.4 8.5-17 19-17z"
-      fill="none"
-      stroke="#fff"
-      stroke-width="3.4"
-      stroke-linejoin="round"></path>
-    <g fill="none" stroke="#fff" stroke-width="4.6" stroke-linecap="round">
-      <path d="M27 22.5v15"></path>
-      <path d="M37.5 22.5 27.6 30l9.9 7.5"></path>
+    <rect id={capaId('fondo')} data-capa="fondo" style={oculto} x="64" y="64" width="896" height="896" rx="224" fill="#4AB378"></rect>
+    <g id={capaId('burbuja')} data-capa="burbuja" style={oculto} fill="#EDF1F5">
+      <rect x="208" y="256" width="624" height="464" rx="150"></rect>
+      <path d="M312 690 L312 848 L440 718 Z"></path>
+    </g>
+    <g fill="none" stroke="#4AB378" stroke-width="72" stroke-linecap="round" stroke-linejoin="round">
+      <path id={capaId('palo')} data-capa="palo" style={oculto} d="M400 338 L400 636"></path>
+      <path id={capaId('brazo')} data-capa="brazo" style={oculto} d="M400 528 L627 301"></path>
+      <path id={capaId('palomita')} data-capa="palomita" style={oculto} d="M400 452 L531 583 L680 420"></path>
     </g>
   </svg>
-  <span class="font-display text-[1.35rem] font-bold tracking-tight">Klokk</span>
+  {
+    wordmark && (
+      <span class="font-display text-[1.35rem] font-bold tracking-tight" aria-hidden={decorative ? undefined : 'true'}>
+        Klokk
+      </span>
+    )
+  }
 </span>
+
+<style is:global>
+  /* Apertura del hero (ver src/scripts/hero-apertura.ts).
+     1) Movimiento reducido: logo completo y quieto desde el primer frame. */
+  @media (prefers-reduced-motion: reduce) {
+    [data-klokk-logo][data-animated] [data-capa] {
+      opacity: 1 !important;
+    }
+  }
+  /* 2) Red de seguridad: si el script nunca arranca (error de red o de JS),
+     las capas aparecen solas a los 3 s. El script marca `data-apertura` en
+     cuanto toma el control y esto deja de aplicar. */
+  [data-klokk-logo][data-animated]:not([data-apertura]) [data-capa] {
+    animation: klokk-logo-failsafe 0s linear 3s forwards;
+  }
+  @keyframes klokk-logo-failsafe {
+    to {
+      opacity: 1;
+    }
+  }
+</style>
+
+{
+  animated && (
+    <noscript>
+      <style is:inline set:html={'[data-klokk-logo][data-animated] [data-capa]{opacity:1!important}'} />
+    </noscript>
+  )
+}

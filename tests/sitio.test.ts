@@ -63,8 +63,12 @@ describe('A27: CTA principal del hero', () => {
     // El QR es SVG inline generado en build: hay <svg con <path dentro del contenedor.
     const i = h.indexOf('class="qr-demo');
     expect(h.slice(i, i + 20_000)).toMatch(/<svg[^>]*viewBox/);
-    // Un solo CTA al demo: el QR codifica la misma URL (se verifica en el componente, aquí la presencia).
-    expect((h.match(/\?text=Entrada"/g) ?? []).length).toBe(1);
+    // Todos los CTA al demo (hero y cierre de la historia) apuntan a la misma URL;
+    // el QR codifica esa misma URL (se verifica en el componente, aquí la presencia).
+    expect((h.match(/\?text=Entrada"/g) ?? []).length).toBeGreaterThanOrEqual(1);
+    const ligasDemo = [...h.matchAll(/href="([^"]*\?text=Entrada[^"]*)"/g)].map((m) => m[1]);
+    expect(ligasDemo.length).toBeGreaterThanOrEqual(1);
+    expect(new Set(ligasDemo).size).toBe(1);
   });
 
   it('la nota enlaza al aviso de privacidad del demo', () => {

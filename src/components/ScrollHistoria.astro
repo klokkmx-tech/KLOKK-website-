@@ -1,5 +1,6 @@
 ---
 import Logo from './Logo.astro';
+import { LINKS } from '../lib/links';
 
 /**
  * Secuencia de scroll debajo del hero: un WhatsApp se convierte en evidencia.
@@ -26,7 +27,7 @@ const pasos: Paso[] = [
   {
     tipo: 'burbuja',
     titulo: 'Tu empleado manda un mensaje.',
-    texto: 'Nada que instalar, nada que aprender. Escribe por WhatsApp, como todos los días.',
+    texto: 'Escribe «Entrada» al número de tu empresa. Nada que instalar, nada que aprender.',
   },
   {
     tipo: 'tarjeta',
@@ -35,19 +36,30 @@ const pasos: Paso[] = [
   },
   {
     tipo: 'documento',
-    titulo: 'Y lo sella como evidencia.',
-    texto: 'Con constancia NOM-151, válida para exhibirla ante la STPS o en una audiencia.',
+    titulo: 'Y al cierre del día queda sellado.',
+    texto:
+      'El registro completo del día queda cubierto por una constancia NOM-151 de un Prestador de Servicios de Certificación. Cada entrada conserva la prueba de que forma parte de ese cierre.',
   },
 ];
 
-// Pantallas de scroll que dura la sección fijada: 1 por paso + entrada/salida.
-// Debe coincidir con TIEMPOS en hero-scroll.ts (intro + pasos + salida ≈ 1 c/u).
-const pantallas = pasos.length + 1;
+// Pantallas de scroll (1 = 100svh) que dura el timeline del scrub. Debe
+// coincidir con TIEMPOS en src/scripts/hero-scroll.ts: intro + pasos·paso + salida.
+const TIEMPOS_SCROLL = { intro: 0.5, paso: 0.75, salida: 0.5 };
+const pantallas = TIEMPOS_SCROLL.intro + pasos.length * TIEMPOS_SCROLL.paso + TIEMPOS_SCROLL.salida;
 
 // Palomita del logo (public/logo.svg, capa `palomita`). Este viewBox recorta el
 // trazo con su grosor (72) para el check de cada paso.
 const PALOMITA_D = 'M400 452 L531 583 L680 420';
 const PALOMITA_VB = '364 384 352 236';
+
+// Filas del documento del paso 3 (datos ficticios). Solo la de María lleva
+// nombre; las demás van anonimizadas (barra gris).
+const filasDia = [
+  { hora: '7:54 a.m.', barra: '62%' },
+  { hora: '8:02 a.m.', nombre: 'María López' },
+  { hora: '8:05 a.m.', barra: '48%' },
+  { hora: '8:11 a.m.', barra: '56%' },
+];
 ---
 
 <section
@@ -67,7 +79,7 @@ const PALOMITA_VB = '364 384 352 236';
           id="historia-titulo"
           class="font-display mt-3 text-3xl leading-[1.1] font-bold tracking-tight text-ink-900 text-balance sm:text-4xl"
         >
-          Un «ya llegué» por WhatsApp termina como evidencia que puedes exhibir.
+          Un mensaje de WhatsApp termina como evidencia que puedes exhibir.
         </h2>
       </header>
 
@@ -81,7 +93,7 @@ const PALOMITA_VB = '364 384 352 236';
                     <p class="mb-4 text-center font-mono text-[0.7rem] text-neutral-400">Hoy</p>
                     <div class="flex justify-end">
                       <div class="rounded-2xl rounded-br-md bg-brand-100 px-4 py-2.5 shadow-sm">
-                        <p class="text-[1rem] font-medium text-ink-900">Ya llegué</p>
+                        <p class="text-[1rem] font-medium text-ink-900">Entrada</p>
                         <p class="mt-0.5 flex items-center justify-end gap-1 font-mono text-[0.7rem] text-neutral-500">
                           8:02 a.m.
                           <svg width="16" height="10" viewBox="0 0 16 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="text-sky-500">
@@ -108,8 +120,8 @@ const PALOMITA_VB = '364 384 352 236';
                         <dd class="font-mono text-ink-900">8:02 a.m.</dd>
                       </div>
                       <div class="flex justify-between gap-4">
-                        <dt class="text-neutral-500">Ubicación aprox.</dt>
-                        <dd class="text-ink-900">Mérida, Yuc.</dd>
+                        <dt class="text-neutral-500">Ubicación</dt>
+                        <dd class="font-mono text-ink-900">20.9674, −89.5926</dd>
                       </div>
                     </dl>
                     <p class="mt-4 inline-flex items-center gap-1.5 rounded-full bg-brand-50 px-3 py-1 text-[0.8rem] font-semibold text-brand-700">
@@ -121,24 +133,36 @@ const PALOMITA_VB = '364 384 352 236';
                 {paso.tipo === 'documento' && (
                   <div class="mock text-left mock-doc relative rounded-xl border border-neutral-200 bg-white p-5 shadow-card">
                     <p class="font-display text-[1.05rem] font-bold text-ink-900">Registro de asistencia</p>
-                    <p class="mt-0.5 font-mono text-[0.68rem] text-neutral-400">Folio KLK-000182 · Hoja 1 de 1</p>
-                    <div class="mt-4 grid grid-cols-[1fr_auto] gap-x-4 gap-y-1.5 border-t border-neutral-100 pt-3 text-[0.78rem]">
-                      <span class="text-neutral-500">Trabajadora</span>
-                      <span class="text-ink-900">María López</span>
-                      <span class="text-neutral-500">Entrada</span>
-                      <span class="font-mono text-ink-900">8:02 a.m.</span>
-                      <span class="text-neutral-500">Ubicación</span>
-                      <span class="text-ink-900">Mérida, Yuc.</span>
+                    <p class="mt-0.5 font-mono text-[0.68rem] text-neutral-400">Cierre del día · 12 registros</p>
+                    <ul class="mt-3 space-y-1 border-t border-neutral-100 pt-3 text-[0.78rem]">
+                      {filasDia.map((fila) =>
+                        fila.nombre ? (
+                          <li class="doc-fila doc-fila-destacada" data-anim="fila">
+                            <span class="font-mono text-ink-900">{fila.hora}</span>
+                            <span class="font-semibold text-ink-900">{fila.nombre}</span>
+                            <span class="doc-marca" data-anim="marca">
+                              <svg viewBox={PALOMITA_VB}>
+                                <path d={PALOMITA_D} />
+                              </svg>
+                              Incluida
+                            </span>
+                          </li>
+                        ) : (
+                          <li class="doc-fila">
+                            <span class="font-mono text-neutral-500">{fila.hora}</span>
+                            <span class="block h-1.5 rounded-full bg-neutral-200" style={`width:${fila.barra}`} />
+                          </li>
+                        ),
+                      )}
+                    </ul>
+                    <div class="doc-cierre" data-anim="cierre">
+                      <span class="font-semibold text-ink-900">Cierre del día</span>
+                      <span class="font-mono text-neutral-500">12 de 12</span>
+                      <span class="sello" data-anim="sello">
+                        <span class="block text-[0.95rem] leading-none font-bold tracking-wide">NOM-151</span>
+                        <span class="mt-1 block font-mono text-[0.55rem] leading-none tracking-wider uppercase">Constancia</span>
+                      </span>
                     </div>
-                    <div class="mt-4 space-y-1.5">
-                      <span class="block h-1.5 w-full rounded-full bg-neutral-100" />
-                      <span class="block h-1.5 w-4/5 rounded-full bg-neutral-100" />
-                      <span class="block h-1.5 w-3/5 rounded-full bg-neutral-100" />
-                    </div>
-                    <span class="sello" data-anim="sello">
-                      <span class="block text-[0.95rem] leading-none font-bold tracking-wide">NOM-151</span>
-                      <span class="mt-1 block font-mono text-[0.55rem] leading-none tracking-wider uppercase">Constancia</span>
-                    </span>
                   </div>
                 )}
                 <span class="paso-badge" data-check-target>
@@ -182,14 +206,22 @@ const PALOMITA_VB = '364 384 352 236';
             Un mensaje. Un registro. Una prueba.
           </p>
           <p class="mt-2 max-w-sm text-[0.975rem] leading-relaxed text-neutral-600">
-            Así queda cada checada de tu equipo, todos los días.
+            Y el expediente completo lo exportas cuando te lo pidan: para tu contador, una inspección o tu abogado.
           </p>
-          <a
-            href="#precios"
-            class="btn-press mt-6 inline-block rounded-full border border-neutral-300 bg-white px-7 py-3.5 text-[0.95rem] font-semibold text-ink-900 transition hover:-translate-y-0.5 hover:border-neutral-400"
-          >
-            Ver planes y precios
-          </a>
+          <div class="historia-cierre-acciones mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
+            <a
+              href={LINKS.demoWhatsApp}
+              class="btn-press btn-check rounded-full bg-brand-600 px-7 py-3.5 text-[0.95rem] font-semibold text-white shadow-md shadow-brand-600/25 transition hover:-translate-y-0.5 hover:bg-brand-700 hover:shadow-lg hover:shadow-brand-600/25"
+            >
+              Probar el demo en WhatsApp
+            </a>
+            <a
+              href="#precios"
+              class="text-[0.95rem] font-semibold text-ink-900 underline underline-offset-4 hover:text-brand-700"
+            >
+              Ver planes y precios
+            </a>
+          </div>
         </div>
       </div>
     </div>
@@ -226,7 +258,7 @@ const PALOMITA_VB = '364 384 352 236';
     width: 100%;
   }
   .mock-doc {
-    min-height: 15rem;
+    padding-bottom: 1.4rem;
   }
 
   /* Insignia de aprobación: círculo blanco donde cae la palomita */
@@ -267,17 +299,60 @@ const PALOMITA_VB = '364 384 352 236';
     stroke-dashoffset: 0;
   }
 
-  /* Sello NOM-151 sobre el documento */
+  /* Documento del paso 3: filas del día, cierre y sello sobre el cierre */
+  .doc-fila {
+    display: grid;
+    grid-template-columns: 4.6rem 1fr auto;
+    align-items: center;
+    gap: 0.6rem;
+    min-height: 1.75rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 0.5rem;
+  }
+  .doc-fila-destacada {
+    background: var(--color-brand-50);
+    box-shadow: inset 0 0 0 1px var(--color-brand-200);
+  }
+  .doc-marca {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--color-brand-700);
+  }
+  .doc-marca svg {
+    width: 0.8rem;
+    overflow: visible;
+  }
+  .doc-marca path {
+    fill: none;
+    stroke: #4ab378;
+    stroke-width: 80;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .doc-cierre {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.75rem;
+    padding: 0.55rem 0.5rem 0;
+    border-top: 1px dashed var(--color-neutral-300, #cfd8d8);
+    font-size: 0.78rem;
+  }
   .sello {
     position: absolute;
-    right: 1rem;
-    bottom: 1rem;
-    padding: 0.55rem 0.8rem;
+    left: 34%;
+    top: 50%;
+    padding: 0.45rem 0.7rem;
     border: 3px solid var(--color-brand-600);
     border-radius: 0.6rem;
     color: var(--color-brand-700);
-    background: rgb(255 255 255 / 0.85);
+    background: rgb(255 255 255 / 0.88);
     text-align: center;
+    translate: 0 -40%;
     transform: rotate(-8deg);
   }
 
@@ -300,6 +375,9 @@ const PALOMITA_VB = '364 384 352 236';
   }
   .historia-cierre p:nth-child(2) {
     margin-inline: auto;
+  }
+  .historia-cierre-acciones {
+    justify-content: center;
   }
 
   @media (min-width: 640px) {
@@ -325,8 +403,9 @@ const PALOMITA_VB = '364 384 352 236';
      sección mide N pantallas y su contenido se queda pegado con sticky. */
   @media (min-width: 1024px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
     :global(html.js) .historia {
-      height: calc(var(--pantallas) * 100vh + 100vh);
-      height: calc(var(--pantallas) * 100svh + 100svh);
+      /* recorrido del scrub = pantallas; arranca con el tope al 45 % (inicioViewport) */
+      height: calc(var(--pantallas) * 100vh + 55vh);
+      height: calc(var(--pantallas) * 100svh + 55svh);
       padding-block: 0;
     }
     :global(html.js) .historia-pin {
@@ -385,8 +464,10 @@ const PALOMITA_VB = '364 384 352 236';
     :global(html.js) .paso-check path {
       opacity: 0;
     }
-    :global(html.js) .sello {
+    /* Estado inicial del paso 3; hero-scroll.ts lo anima (data-anim) */
+    :global(html.js) [data-anim] {
       opacity: 0;
+      visibility: hidden;
     }
     :global(html.js) .historia-logo {
       grid-column: 2;
@@ -418,6 +499,9 @@ const PALOMITA_VB = '364 384 352 236';
     }
     :global(html.js) .historia-cierre p:nth-child(2) {
       margin-inline: 0;
+    }
+    :global(html.js) .historia-cierre-acciones {
+      justify-content: flex-start;
     }
   }
 </style>

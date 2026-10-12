@@ -12,7 +12,9 @@
  *
  * Anima solo transform, opacity (autoAlpha) y stroke-dashoffset.
  */
-import gsap from 'gsap';
+// GSAP se carga con import() dinámico y SOLO si aplica el modo scrub de
+// escritorio: en móvil/touch/movimiento reducido no se descarga el chunk.
+let gsap: typeof import('gsap').default;
 
 /** Debe coincidir con el @media del modo scrub en ScrollHistoria.astro. */
 export const MEDIA_SCRUB =
@@ -24,15 +26,21 @@ export const MEDIA_SCRUB =
  */
 export const TIEMPOS = {
   intro: 0.5,
-  paso: 1,
-  salida: 1,
+  paso: 0.75, // si cambias intro/paso/salida, cambia TIEMPOS_SCROLL en ScrollHistoria.astro
+  salida: 0.5,
   // dentro de cada paso (fracción de TIEMPOS.paso)
   entraVisual: 0, // la tarjeta/burbuja entra
   duraVisual: 0.35,
   saleVisual: 0.3, // duración de la salida del paso anterior
   despegaPalomita: 0.15, // la palomita sale de la K (o del paso anterior)
   duraPalomita: 0.35, // vuelo hasta la insignia del paso
-  sello: 0.45, // elementos [data-anim="sello"] caen sobre el visual
+  // Sub-animaciones de un visual, por atributo data-anim (paso 3: el documento).
+  // Orden: entra la fila de María → aparece el cierre del día → cae el sello
+  // sobre el cierre → la fila de María se marca «Incluida».
+  fila: 0.12,
+  cierre: 0.3,
+  sello: 0.45,
+  marca: 0.68,
   duraSello: 0.2,
   /** Altura extra del arco que hace la palomita al saltar (px). */
   arco: 70,
@@ -147,15 +155,21 @@ function iniciar(seccion: HTMLElement) {
         );
       }
 
-      // Sellos que caen sobre el visual
-      visual.querySelectorAll('[data-anim="sello"]').forEach((sello) => {
-        tl.fromTo(
-          sello,
-          { autoAlpha: 0, scale: 1.9, rotation: -22 },
-          { autoAlpha: 1, scale: 1, rotation: -8, duration: T.duraSello * P, ease: 'back.out(2)' },
-          t0 + T.sello * P,
-        );
-      });
+      // Sub-animaciones del visual (data-anim), en el orden de TIEMPOS
+      const sub = (nombre: string, desde: gsap.TweenVars, hasta: gsap.TweenVars, en: number) =>
+        visual.querySelectorAll(`[data-anim="${nombre}"]`).forEach((el) => {
+          tl.fromTo(el, { autoAlpha: 0, ...desde }, { autoAlpha: 1, ...hasta }, t0 + en * P);
+        });
+      // La tarjeta del paso anterior «aterriza» como fila del documento
+      sub('fila', { y: -26, scale: 1.06 }, { y: 0, scale: 1, duration: 0.2 * P }, T.fila);
+      sub('cierre', { y: 10 }, { y: 0, duration: 0.15 * P }, T.cierre);
+      sub(
+        'sello',
+        { scale: 1.9, rotation: -22 },
+        { scale: 1, rotation: -8, duration: T.duraSello * P, ease: 'back.out(2)' },
+        T.sello,
+      );
+      sub('marca', { scale: 0.6, x: -6 }, { scale: 1, x: 0, duration: 0.12 * P, ease: 'back.out(2)' }, T.marca);
 
       // La palomita: despega (de la K o del paso anterior), hace un arco y
       // aterriza en la insignia del paso
@@ -179,12 +193,13 @@ function iniciar(seccion: HTMLElement) {
     // rearma completo junto al CTA de cierre.
     const ts = T.intro + n * P;
     const ultimo = visuales[n - 1];
-    tl.to(ultimo, { autoAlpha: 0, scale: 0.9, duration: 0.3, ease: 'power2.in' }, ts);
-    if (textos[n - 1]) tl.to(textos[n - 1], { autoAlpha: 0, y: -16, duration: 0.3, ease: 'power2.in' }, ts);
-    tl.to(vuelo, { x: 0, y: 0, scale: 1, duration: 0.35, ease: 'power2.inOut' }, ts + 0.1);
-    if (!capaPalomita) tl.to(vuelo, { autoAlpha: 0, duration: 0.05 }, ts + 0.45);
-    tl.to(logo, { y: () => centroLogo.y, scale: 1.6, duration: 0.35, ease: 'power2.inOut' }, ts + 0.45);
-    tl.fromTo(cierre, { autoAlpha: 0, y: 18 }, { autoAlpha: 1, y: 0, duration: 0.3 }, ts + 0.55);
+    const S = T.salida;
+    tl.to(ultimo, { autoAlpha: 0, scale: 0.9, duration: 0.3 * S, ease: 'power2.in' }, ts);
+    if (textos[n - 1]) tl.to(textos[n - 1], { autoAlpha: 0, y: -16, duration: 0.3 * S, ease: 'power2.in' }, ts);
+    tl.to(vuelo, { x: 0, y: 0, scale: 1, duration: 0.35 * S, ease: 'power2.inOut' }, ts + 0.1 * S);
+    if (!capaPalomita) tl.to(vuelo, { autoAlpha: 0, duration: 0.05 * S }, ts + 0.45 * S);
+    tl.to(logo, { y: () => centroLogo.y, scale: 1.6, duration: 0.35 * S, ease: 'power2.inOut' }, ts + 0.45 * S);
+    tl.fromTo(cierre, { autoAlpha: 0, y: 18 }, { autoAlpha: 1, y: 0, duration: 0.3 * S }, ts + 0.55 * S);
 
     // ── Scrub: progreso del timeline = posición de scroll dentro de la sección ──
     let inicio = 0;
@@ -254,13 +269,24 @@ function iniciar(seccion: HTMLElement) {
       cancelAnimationFrame(frame);
       tl.kill();
       gsap.set(animados, { clearProps: 'all' });
-      seccion.querySelectorAll('[data-anim="sello"]').forEach((el) => gsap.set(el, { clearProps: 'all' }));
+      seccion.querySelectorAll('[data-anim]').forEach((el) => gsap.set(el, { clearProps: 'all' }));
     };
   });
 }
 
 function arrancar() {
-  document.querySelectorAll<HTMLElement>('[data-historia]').forEach(iniciar);
+  const secciones = document.querySelectorAll<HTMLElement>('[data-historia]');
+  if (!secciones.length) return;
+  const mq = window.matchMedia(MEDIA_SCRUB);
+  const cargar = async () => {
+    if (!mq.matches) return;
+    mq.removeEventListener('change', cargar);
+    gsap = (await import('gsap')).default;
+    secciones.forEach(iniciar);
+  };
+  // Si la ventana entra al modo escritorio después (resize), se carga entonces.
+  if (mq.matches) void cargar();
+  else mq.addEventListener('change', cargar);
 }
 
 // Después del primer paint: no compite con la apertura del hero.

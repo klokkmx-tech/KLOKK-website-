@@ -21,8 +21,10 @@ import { LINKS } from '../lib/links';
 
     <ul class="space-y-2 text-[0.875rem] font-medium text-ink-900">
       <li><a href="/aviso-de-privacidad" class="underline-offset-4 hover:underline">Aviso de privacidad</a></li>
+      <li><a href="/privacidad-demo" class="underline-offset-4 hover:underline">Aviso de privacidad del demo</a></li>
       <li><a href="/terminos-de-servicio" class="underline-offset-4 hover:underline">Términos de servicio</a></li>
-      <li><a href={LINKS.whatsapp} class="underline-offset-4 hover:underline">Contacto</a></li>
+      <li><a href={`mailto:${LINKS.email}`} class="underline-offset-4 hover:underline">Contacto</a></li>
+      <li><a href={LINKS.whatsapp} class="underline-offset-4 hover:underline">WhatsApp</a></li>
     </ul>
   </div>
 </footer>

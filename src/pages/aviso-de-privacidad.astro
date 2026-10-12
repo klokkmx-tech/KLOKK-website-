@@ -1,0 +1,37 @@
+---
+// Aviso de privacidad integral. Texto PENDIENTE: lo redacta/valida el abogado.
+// No se improvisa contenido legal aquí; esta página solo existe para que el
+// enlace del pie funcione y oriente a quien llegue.
+import LegalLayout from '../layouts/LegalLayout.astro';
+import { LINKS } from '../lib/links';
+---
+
+<LegalLayout
+  title="Aviso de privacidad"
+  description="Aviso de privacidad de Klokk Technology, S. de R.L. de C.V."
+>
+  <section>
+    <h2>Responsable</h2>
+    <p>Klokk Technology, S. de R.L. de C.V., con domicilio en Mérida, Yucatán, México.</p>
+  </section>
+
+  <section>
+    <h2>Aviso integral</h2>
+    <p>
+      El aviso de privacidad integral de Klokk está en revisión legal y se publicará en esta página.
+    </p>
+    <p>
+      Si usaste el demo automático por WhatsApp, el tratamiento de tus datos se describe en el{" "}
+      <a href="/privacidad-demo">Aviso de privacidad del demo</a>.
+    </p>
+  </section>
+
+  <section>
+    <h2>Dudas y derechos ARCO</h2>
+    <p>
+      Para cualquier duda sobre tus datos personales, o para ejercer tus derechos de acceso,
+      rectificación, cancelación u oposición, escríbenos a{" "}
+      <a href={`mailto:${LINKS.email}`}>{LINKS.email}</a>.
+    </p>
+  </section>
+</LegalLayout>

@@ -167,6 +167,48 @@ details.faq-item[open]::details-content {
   transform: scale(0.97);
 }
 
+/* Botón primario con palomita al hover (src/scripts/hero-mouse.ts inyecta el
+   <svg> y marca .btn-check-on). El texto se corre con transform y la palomita
+   se dibuja en el padding derecho: el botón nunca cambia de tamaño. */
+.btn-check-on {
+  position: relative;
+}
+.btn-check-label {
+  display: inline-block;
+  transition: transform 0.25s var(--ease-out-soft);
+}
+.btn-check-icon {
+  position: absolute;
+  top: 50%;
+  right: 0.95rem;
+  width: 0.95em;
+  height: auto;
+  overflow: visible;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+.btn-check-icon path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 72;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 0.25s var(--ease-out-soft);
+}
+@media (hover: hover) and (pointer: fine) {
+  .btn-check-on:hover .btn-check-label,
+  .btn-check-on:focus-visible .btn-check-label {
+    transform: translateX(-0.6em);
+  }
+  .btn-check-on:hover .btn-check-icon path,
+  .btn-check-on:focus-visible .btn-check-icon path {
+    stroke-dashoffset: 0;
+    transition-delay: 0.05s;
+  }
+}
+
 /* Revelado al hacer scroll — progresivo: sin JS todo es visible */
 .reveal {
   opacity: 1;

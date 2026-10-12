@@ -1,6 +1,23 @@
 # Reporte de QA — animación del hero (`feat/hero-animation`)
 
-QA independiente con Playwright 1.58 + Chromium headless-shell 1208 sobre el build estático (`.vercel/output/static`). Tres pasadas: `d8980c2` → `af722ba` → `fccda53` (final).
+QA independiente con Playwright 1.58 + Chromium headless-shell 1208 sobre el build estático (`.vercel/output/static`). Cinco pasadas: `d8980c2` → `af722ba` → `fccda53` → `0f3e47e` → `d7d4701` (final).
+
+## Correcciones del memo ANIM-WEB-01 (@ `d7d4701`)
+
+| Criterio del memo | Resultado | Evidencia |
+|---|---|---|
+| A 390×664 y 360×670 el botón «Probar el demo en WhatsApp» se ve completo sin scroll | CUMPLE | CTA en 555–605 px en ambos (H1 160–335). Sin logo grande en el hero bajo `lg` (`display:none`); el móvil no descarga gsap. |
+| En el HTML no aparecen «ya llegué», «válida», «ante la STPS», «en una audiencia»; la burbuja dice «Entrada» | CUMPLE (con nota) | 0 / 0 / 0 coincidencias de las tres primeras. «en una audiencia» aparece 1 vez, en `Faq.astro:5` (texto previo al PR, fuera del alcance); ninguna viene de ScrollHistoria. Burbuja «Entrada». |
+| El sello cae sobre el cierre del día y la fila de María queda marcada | CUMPLE | Orden en desktop (scrub): fila de María → renglón «Cierre del día» → sello (y 647–708 sobre el cierre 639–667, lejos de la fila 535–563) → marca «Incluida» en la fila. Igual en móvil. |
+| CLS del hero 0 y JS ≤ 40 KB gzip | CUMPLE | CLS **0** en 1440×900 (×3, también con reduced-motion y con woff2 bloqueadas), 390×664 y 360×670 (fallbacks con métricas para Bricolage e Inter). JS escritorio **31.5 KB**; móvil **≈5.2 KB** sin gsap (import dinámico, sin modulepreload). |
+| Build, `astro check` y pruebas en verde con A27 actualizada | CUMPLE | Build OK; 0/0/0; 149/149. A27 ahora exige ≥1 liga `?text=Entrada` y que todas apunten a la misma URL (hay 2, ambas al demo). |
+| Desktop sin regresión | CUMPLE | Apertura completa a 1500 ms; tilt y palomita del botón funcionan; `#historia` sticky, ahora 2510 px de pin (antes ~3570; `paso` 0.75, `salida` 0.5). |
+
+Observación: el sello sobresale ~17–20 px del borde inferior del documento (parece intencional, pero en móvil queda cerca de la etiqueta «Paso 3»).
+
+---
+
+## Pasadas 1–3 (brief original)
 
 ## Resultado final (@ `fccda53`)
 

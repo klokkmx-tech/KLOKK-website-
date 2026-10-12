@@ -15,6 +15,35 @@
 @import '@fontsource/ibm-plex-mono/400.css';
 @import '@fontsource/ibm-plex-mono/500.css';
 
+/* Respaldo de Bricolage con métricas ajustadas: mientras carga el woff2
+   (font-display: swap) el texto ocupa el mismo ancho y alto, así el titular
+   del hero no cambia de 3 a 4 líneas al hacer swap (CLS). Valores medidos con
+   fontTools sobre bricolage-grotesque-latin-wght-normal.woff2 (upm 1000,
+   ascent .93, descent .27, gap 0) contra Arial / Arial Bold, usando el
+   titular del hero: wght 400 → 104.85 %, wght 700 → 101.15 %.
+   override = métrica de Bricolage / size-adjust. Liberation Sans comparte
+   métricas con Arial (Linux/CI). */
+@font-face {
+  font-family: 'Bricolage Fallback';
+  src: local('Arial'), local('ArialMT'), local('Liberation Sans'), local('LiberationSans');
+  font-weight: 100 599;
+  font-style: normal;
+  size-adjust: 104.85%;
+  ascent-override: 88.7%;
+  descent-override: 25.75%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Bricolage Fallback';
+  src: local('Arial Bold'), local('Arial-BoldMT'), local('Liberation Sans Bold'), local('LiberationSans-Bold');
+  font-weight: 600 900;
+  font-style: normal;
+  size-adjust: 101.15%;
+  ascent-override: 91.94%;
+  descent-override: 26.69%;
+  line-gap-override: 0%;
+}
+
 @theme {
   /* ── Marca Klokk ─────────────────────────────── */
   --color-brand-50: #eef8f1;
@@ -50,7 +79,7 @@
   --color-amber-ink: #8a6a1f;
 
   /* Tipografía */
-  --font-display: 'Bricolage Grotesque Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Bricolage Grotesque Variable', 'Bricolage Fallback', ui-sans-serif, system-ui, sans-serif;
   --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', monospace;
 

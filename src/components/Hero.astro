@@ -21,18 +21,20 @@ const bullets = [
 ];
 ---
 
-<section class="hero relative overflow-hidden pt-28 pb-16 sm:pt-36 sm:pb-24" style={fadeVars}>
-  <!-- fondo con deriva lenta -->
+<section class="hero relative overflow-hidden pt-24 pb-16 sm:pt-36 sm:pb-24" style={fadeVars}>
+  <!-- fondo con deriva lenta. top/bottom en px (no %): con -inset-[10%] su
+       arranque dependía del alto de la sección y cualquier cambio de alto (p. ej.
+       al cargar las fuentes) se contaba como layout shift. -->
   <div
     aria-hidden="true"
-    class="aurora pointer-events-none absolute -inset-[10%] -z-10"
+    class="aurora pointer-events-none absolute -inset-x-[10%] -top-24 -bottom-24 -z-10"
     style="background:
       radial-gradient(48rem 30rem at 85% 0%, rgb(53 161 98 / 0.08), transparent 60%),
       radial-gradient(40rem 26rem at 0% 100%, rgb(15 50 55 / 0.05), transparent 60%);"
   >
   </div>
 
-  <div class="mx-auto grid max-w-6xl items-center gap-14 px-5 sm:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10">
+  <div class="mx-auto grid max-w-6xl items-center gap-6 px-5 sm:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10">
     <div>
       <p
         class="hero-in inline-flex flex-wrap items-center gap-x-2.5 gap-y-1 rounded-full border border-neutral-200 bg-white py-1.5 pr-4 pl-3 text-[0.8rem] shadow-sm"
@@ -92,9 +94,11 @@ const bullets = [
 
     <!-- Logo grande con apertura. El contenedor externo da la perspectiva; el
          elemento [data-hero-logo] reserva el espacio (cuadrado, ancho fijo) y es
-         el que inclina hero-mouse.ts. El pop de la apertura va en el <svg>. -->
-    <div class="flex justify-center [perspective:900px] lg:justify-end lg:pr-6">
-      <div data-hero-logo class="aspect-square w-[200px] sm:w-[280px] lg:w-[380px]">
+         el que inclina hero-mouse.ts. El pop de la apertura va en el <svg>.
+         En móvil/tablet (< lg) va ARRIBA del texto y chico (136/200 px) para que la
+         apertura se vea en el primer viewport; en lg vuelve a la derecha (380 px). -->
+    <div class="order-first flex justify-center [perspective:900px] lg:order-none lg:justify-end lg:pr-6">
+      <div data-hero-logo class="aspect-square w-[136px] sm:w-[200px] lg:w-[380px]">
         <Logo
           id="hero-logo"
           animated
@@ -116,7 +120,7 @@ const bullets = [
   }
   @keyframes hero-in {
     from {
-      opacity: var(--hero-in-from, 0.35);
+      opacity: var(--hero-in-from, 0.6);
       transform: translateY(var(--hero-in-y, 8px));
     }
     to {

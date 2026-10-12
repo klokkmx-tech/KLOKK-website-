@@ -1,5 +1,5 @@
 /**
- * Secuencia de scroll de ScrollHistoria.astro (docs/HERO-ANIMATION.md).
+ * Secuencia de scroll de ScrollHistoria.astro (HERO-ANIMATION.md).
  *
  * Solo en escritorio con mouse y sin movimiento reducido: un timeline de GSAP
  * atado al scroll (scrub). El «pin» lo hace CSS (position: sticky dentro de una

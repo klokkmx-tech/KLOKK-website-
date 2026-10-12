@@ -1,5 +1,5 @@
 /**
- * Detalles de mouse del hero (docs/HERO-ANIMATION.md). Solo con
+ * Detalles de mouse del hero (HERO-ANIMATION.md). Solo con
  * `(hover: hover) and (pointer: fine)`; en touch no existen.
  *
  * 1. Inclinación: `[data-hero-logo]` rota hacia el cursor (máx. TILT.maxGrados

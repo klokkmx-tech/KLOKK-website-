@@ -44,7 +44,7 @@ export const APERTURA = {
   },
 
   /** Fade-in del texto del hero (titular, párrafo, CTAs), en paralelo. */
-  texto: { duracion: 600, desplazamientoPx: 8, opacidadInicial: 0.35 },
+  texto: { duracion: 600, desplazamientoPx: 8, opacidadInicial: 0.6 },
 
   /**
    * Si el script arranca más tarde que esto (red lenta), no se anima: el logo

@@ -17,7 +17,9 @@ Secuencia por defecto:
 | 700–1000 | `brazo` | power2.inOut |
 | 1000–1280 | `palomita` | power2.out |
 | 1280–1500 | pop del logo a 1.04 y regreso | power2.out → elastic.out(1, 0.6) |
-| 0–600 | titular, párrafo y CTAs (CSS, en paralelo, sin delays) | ease-out |
+| 0–600 | titular, párrafo y CTAs (CSS, en paralelo, sin delays; arrancan en opacidad 0.6 para leerse desde el frame 0) | ease-out |
+
+Layout: en `lg` el logo va a la derecha (380 px); debajo de `lg` va arriba del texto, centrado y chico (136 px en móvil, 200 px en `sm`), para que la apertura ocurra dentro del primer viewport (390×844).
 
 ### Componente del logo
 

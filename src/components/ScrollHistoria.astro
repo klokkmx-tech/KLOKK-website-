@@ -1,0 +1,507 @@
+---
+import Logo from './Logo.astro';
+import { LINKS } from '../lib/links';
+
+/**
+ * Secuencia de scroll debajo del hero: un WhatsApp se convierte en evidencia.
+ * La animación vive en src/scripts/hero-scroll.ts (ver HERO-ANIMATION.md).
+ *
+ * - Escritorio con mouse y sin movimiento reducido: la sección se fija
+ *   (position: sticky) y un timeline de GSAP avanza con el scroll (scrub).
+ * - Móvil, touch o movimiento reducido: los pasos se apilan y se revelan
+ *   con `.reveal` (IntersectionObserver de Layout.astro). Sin pin ni scrub.
+ *
+ * Para agregar un paso: añade un objeto a `pasos` con un `tipo` existente
+ * (o crea su markup abajo en el `switch` de mockups). La altura de la sección
+ * y el timeline se calculan solos a partir de `pasos.length`.
+ * Datos del mockup: ficticios.
+ */
+type TipoPaso = 'burbuja' | 'tarjeta' | 'documento';
+interface Paso {
+  tipo: TipoPaso;
+  titulo: string;
+  texto: string;
+}
+
+const pasos: Paso[] = [
+  {
+    tipo: 'burbuja',
+    titulo: 'Tu empleado manda un mensaje.',
+    texto: 'Escribe «Entrada» al número de tu empresa. Nada que instalar, nada que aprender.',
+  },
+  {
+    tipo: 'tarjeta',
+    titulo: 'Klokk lo convierte en un registro.',
+    texto: 'Con hora de servidor y ubicación, sin que nadie lo capture a mano.',
+  },
+  {
+    tipo: 'documento',
+    titulo: 'Y al cierre del día queda sellado.',
+    texto:
+      'El registro completo del día queda cubierto por una constancia NOM-151 de un Prestador de Servicios de Certificación. Cada entrada conserva la prueba de que forma parte de ese cierre.',
+  },
+];
+
+// Pantallas de scroll (1 = 100svh) que dura el timeline del scrub. Debe
+// coincidir con TIEMPOS en src/scripts/hero-scroll.ts: intro + pasos·paso + salida.
+const TIEMPOS_SCROLL = { intro: 0.5, paso: 0.75, salida: 0.5 };
+const pantallas = TIEMPOS_SCROLL.intro + pasos.length * TIEMPOS_SCROLL.paso + TIEMPOS_SCROLL.salida;
+
+// Palomita del logo (public/logo.svg, capa `palomita`). Este viewBox recorta el
+// trazo con su grosor (72) para el check de cada paso.
+const PALOMITA_D = 'M400 452 L531 583 L680 420';
+const PALOMITA_VB = '364 384 352 236';
+
+// Filas del documento del paso 3 (datos ficticios). Solo la de María lleva
+// nombre; las demás van anonimizadas (barra gris).
+const filasDia = [
+  { hora: '7:54 a.m.', barra: '62%' },
+  { hora: '8:02 a.m.', nombre: 'María López' },
+  { hora: '8:05 a.m.', barra: '48%' },
+  { hora: '8:11 a.m.', barra: '56%' },
+];
+---
+
+<section
+  id="historia"
+  class="historia scroll-mt-16"
+  style={`--pantallas:${pantallas}`}
+  data-historia
+  aria-labelledby="historia-titulo"
+>
+  <div class="historia-pin">
+    <div class="mx-auto w-full max-w-6xl px-5 sm:px-8">
+      <header class="historia-head reveal max-w-2xl">
+        <p class="font-mono text-[0.8rem] font-medium tracking-wide text-brand-700 uppercase">
+          De un mensaje a una prueba
+        </p>
+        <h2
+          id="historia-titulo"
+          class="font-display mt-3 text-3xl leading-[1.1] font-bold tracking-tight text-ink-900 text-balance sm:text-4xl"
+        >
+          Un mensaje de WhatsApp termina como evidencia que puedes exhibir.
+        </h2>
+      </header>
+
+      <div class="historia-grid" data-historia-grid>
+        {
+          pasos.map((paso, i) => (
+            <div class="paso" data-paso={i} style={`--reveal-delay:${i * 90}ms`}>
+              <div class="paso-visual reveal" aria-hidden="true" data-paso-visual>
+                {paso.tipo === 'burbuja' && (
+                  <div class="mock text-left mock-chat rounded-3xl border border-neutral-200 bg-neutral-50 p-5 shadow-card">
+                    <p class="mb-4 text-center font-mono text-[0.7rem] text-neutral-400">Hoy</p>
+                    <div class="flex justify-end">
+                      <div class="rounded-2xl rounded-br-md bg-brand-100 px-4 py-2.5 shadow-sm">
+                        <p class="text-[1rem] font-medium text-ink-900">Entrada</p>
+                        <p class="mt-0.5 flex items-center justify-end gap-1 font-mono text-[0.7rem] text-neutral-500">
+                          8:02 a.m.
+                          <svg width="16" height="10" viewBox="0 0 16 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="text-sky-500">
+                            <path d="M1 5.5l3 3L10.5 1.5" />
+                            <path d="M6.5 8.5l.5.5L14.5 1.5" />
+                          </svg>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                {paso.tipo === 'tarjeta' && (
+                  <div class="mock text-left rounded-3xl border border-neutral-200 bg-white p-5 shadow-card">
+                    <div class="flex items-center gap-3">
+                      <span class="grid size-10 place-items-center rounded-full bg-ink-900 text-[0.8rem] font-semibold text-white">ML</span>
+                      <div class="leading-tight">
+                        <p class="font-semibold text-ink-900">María López</p>
+                        <p class="mt-0.5 text-[0.8rem] text-neutral-500">Turno matutino</p>
+                      </div>
+                    </div>
+                    <dl class="mt-4 space-y-2 border-t border-neutral-100 pt-4 text-[0.85rem]">
+                      <div class="flex justify-between gap-4">
+                        <dt class="text-neutral-500">Hora</dt>
+                        <dd class="font-mono text-ink-900">8:02 a.m.</dd>
+                      </div>
+                      <div class="flex justify-between gap-4">
+                        <dt class="text-neutral-500">Ubicación</dt>
+                        <dd class="font-mono text-ink-900">20.9674, −89.5926</dd>
+                      </div>
+                    </dl>
+                    <p class="mt-4 inline-flex items-center gap-1.5 rounded-full bg-brand-50 px-3 py-1 text-[0.8rem] font-semibold text-brand-700">
+                      <span class="size-1.5 rounded-full bg-brand-500" />
+                      Entrada registrada
+                    </p>
+                  </div>
+                )}
+                {paso.tipo === 'documento' && (
+                  <div class="mock text-left mock-doc relative rounded-xl border border-neutral-200 bg-white p-5 shadow-card">
+                    <p class="font-display text-[1.05rem] font-bold text-ink-900">Registro de asistencia</p>
+                    <p class="mt-0.5 font-mono text-[0.68rem] text-neutral-400">Cierre del día · 12 registros</p>
+                    <ul class="mt-3 space-y-1 border-t border-neutral-100 pt-3 text-[0.78rem]">
+                      {filasDia.map((fila) =>
+                        fila.nombre ? (
+                          <li class="doc-fila doc-fila-destacada" data-anim="fila">
+                            <span class="font-mono text-ink-900">{fila.hora}</span>
+                            <span class="font-semibold text-ink-900">{fila.nombre}</span>
+                            <span class="doc-marca" data-anim="marca">
+                              <svg viewBox={PALOMITA_VB}>
+                                <path d={PALOMITA_D} />
+                              </svg>
+                              Incluida
+                            </span>
+                          </li>
+                        ) : (
+                          <li class="doc-fila">
+                            <span class="font-mono text-neutral-500">{fila.hora}</span>
+                            <span class="block h-1.5 rounded-full bg-neutral-200" style={`width:${fila.barra}`} />
+                          </li>
+                        ),
+                      )}
+                    </ul>
+                    <div class="doc-cierre" data-anim="cierre">
+                      <span class="font-semibold text-ink-900">Cierre del día</span>
+                      <span class="font-mono text-neutral-500">12 de 12</span>
+                      <span class="sello" data-anim="sello">
+                        <span class="block text-[0.95rem] leading-none font-bold tracking-wide">NOM-151</span>
+                        <span class="mt-1 block font-mono text-[0.55rem] leading-none tracking-wider uppercase">Constancia</span>
+                      </span>
+                    </div>
+                  </div>
+                )}
+                <span class="paso-badge" data-check-target>
+                  <svg class="paso-check" viewBox={PALOMITA_VB}>
+                    <path d={PALOMITA_D} pathLength="1" />
+                  </svg>
+                </span>
+              </div>
+              <div class="paso-texto reveal" data-paso-texto>
+                <p class="font-mono text-[0.75rem] font-medium tracking-wide text-neutral-500">
+                  Paso {i + 1}
+                </p>
+                <h3 class="font-display mt-2 text-2xl leading-tight font-bold tracking-tight text-ink-900 lg:text-[1.75rem]">
+                  {paso.titulo}
+                </h3>
+                <p class="mt-2 max-w-sm text-[0.975rem] leading-relaxed text-neutral-600">{paso.texto}</p>
+              </div>
+            </div>
+          ))
+        }
+
+        <!-- Logo que se rearma al final. La palomita que «vuela» es una copia
+             encimada exactamente sobre la capa `palomita` del logo. -->
+        <div class="historia-logo reveal" aria-hidden="true" data-historia-logo>
+          <div class="historia-home" data-historia-home>
+            <Logo id="historia-logo" size={88} wordmark={false} decorative svgClass="block size-full" />
+          </div>
+          <svg class="historia-vuelo" viewBox="64 64 896 896" data-historia-vuelo>
+            <path
+              d={PALOMITA_D}
+              fill="none"
+              stroke="#4AB378"
+              stroke-width="72"
+              stroke-linecap="round"
+              stroke-linejoin="round"></path>
+          </svg>
+        </div>
+
+        <div class="historia-cierre reveal" data-historia-cierre>
+          <p class="font-display text-2xl leading-tight font-bold tracking-tight text-ink-900 lg:text-[1.75rem]">
+            Un mensaje. Un registro. Una prueba.
+          </p>
+          <p class="mt-2 max-w-sm text-[0.975rem] leading-relaxed text-neutral-600">
+            Y el expediente completo lo exportas cuando te lo pidan: para tu contador, una inspección o tu abogado.
+          </p>
+          <div class="historia-cierre-acciones mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
+            <a
+              href={LINKS.demoWhatsApp}
+              class="btn-press btn-check rounded-full bg-brand-600 px-7 py-3.5 text-[0.95rem] font-semibold text-white shadow-md shadow-brand-600/25 transition hover:-translate-y-0.5 hover:bg-brand-700 hover:shadow-lg hover:shadow-brand-600/25"
+            >
+              Probar el demo en WhatsApp
+            </a>
+            <a
+              href="#precios"
+              class="text-[0.95rem] font-semibold text-ink-900 underline underline-offset-4 hover:text-brand-700"
+            >
+              Ver planes y precios
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script src="../scripts/hero-scroll.ts"></script>
+
+<style>
+  /* ── Base (móvil, touch, movimiento reducido, sin JS): pasos apilados ── */
+  .historia {
+    padding-block: 5rem;
+  }
+  .historia-grid {
+    display: grid;
+    gap: 3.5rem;
+    margin-top: 3rem;
+  }
+  .paso {
+    display: grid;
+    gap: 1.5rem;
+    justify-items: center;
+    text-align: center;
+  }
+  .paso-texto p:last-child {
+    margin-inline: auto;
+  }
+  .paso-visual {
+    position: relative;
+    width: 100%;
+    max-width: 20rem;
+  }
+  .mock {
+    width: 100%;
+  }
+  .mock-doc {
+    padding-bottom: 1.4rem;
+  }
+
+  /* Insignia de aprobación: círculo blanco donde cae la palomita */
+  .paso-badge {
+    position: absolute;
+    top: -1.1rem;
+    right: -0.9rem;
+    display: grid;
+    place-items: center;
+    width: 3.25rem;
+    height: 3.25rem;
+    border-radius: 9999px;
+    background: #fff;
+    box-shadow:
+      0 0 0 1px var(--color-brand-200),
+      0 8px 20px -8px rgb(15 50 55 / 0.25);
+  }
+  .paso-check {
+    width: 1.9rem;
+    height: auto;
+    overflow: visible;
+  }
+  .paso-check path {
+    fill: none;
+    stroke: #4ab378;
+    stroke-width: 72;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 0;
+  }
+  /* Con JS, el check se dibuja cuando el paso entra al viewport */
+  :global(html.js) .paso-check path {
+    stroke-dashoffset: 1;
+    transition: stroke-dashoffset 0.45s var(--ease-out-soft) 0.35s;
+  }
+  :global(html.js) .paso-visual.is-visible .paso-check path {
+    stroke-dashoffset: 0;
+  }
+
+  /* Documento del paso 3: filas del día, cierre y sello sobre el cierre */
+  .doc-fila {
+    display: grid;
+    grid-template-columns: 4.6rem 1fr auto;
+    align-items: center;
+    gap: 0.6rem;
+    min-height: 1.75rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 0.5rem;
+  }
+  .doc-fila-destacada {
+    background: var(--color-brand-50);
+    box-shadow: inset 0 0 0 1px var(--color-brand-200);
+  }
+  .doc-marca {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--color-brand-700);
+  }
+  .doc-marca svg {
+    width: 0.8rem;
+    overflow: visible;
+  }
+  .doc-marca path {
+    fill: none;
+    stroke: #4ab378;
+    stroke-width: 80;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .doc-cierre {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.75rem;
+    padding: 0.55rem 0.5rem 0;
+    border-top: 1px dashed var(--color-neutral-300, #cfd8d8);
+    font-size: 0.78rem;
+  }
+  .sello {
+    position: absolute;
+    left: 34%;
+    top: 50%;
+    padding: 0.45rem 0.7rem;
+    border: 3px solid var(--color-brand-600);
+    border-radius: 0.6rem;
+    color: var(--color-brand-700);
+    background: rgb(255 255 255 / 0.88);
+    text-align: center;
+    translate: 0 -40%;
+    transform: rotate(-8deg);
+  }
+
+  .historia-logo {
+    position: relative;
+    justify-self: center;
+    width: 88px;
+    height: 88px;
+  }
+  .historia-home {
+    width: 100%;
+    height: 100%;
+  }
+  .historia-vuelo {
+    display: none;
+  }
+  .historia-cierre {
+    margin-top: -2rem;
+    text-align: center;
+  }
+  .historia-cierre p:nth-child(2) {
+    margin-inline: auto;
+  }
+  .historia-cierre-acciones {
+    justify-content: center;
+  }
+
+  @media (min-width: 640px) {
+    .historia {
+      padding-block: 7rem;
+    }
+  }
+
+  /* Escritorio sin scrub (touch grande o movimiento reducido): 3 columnas */
+  @media (min-width: 1024px) {
+    .historia-grid {
+      grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr));
+      column-gap: 2.5rem;
+    }
+    .historia-logo,
+    .historia-cierre {
+      grid-column: 1 / -1;
+    }
+  }
+
+  /* ── Escritorio con mouse: sección fijada + scrub (hero-scroll.ts) ──
+     La altura se reserva en CSS desde el primer frame (cero saltos): la
+     sección mide N pantallas y su contenido se queda pegado con sticky. */
+  @media (min-width: 1024px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    :global(html.js) .historia {
+      /* recorrido del scrub = pantallas; arranca con el tope al 45 % (inicioViewport) */
+      height: calc(var(--pantallas) * 100vh + 55vh);
+      height: calc(var(--pantallas) * 100svh + 55svh);
+      padding-block: 0;
+    }
+    :global(html.js) .historia-pin {
+      position: sticky;
+      top: 0;
+      display: flex;
+      align-items: center;
+      height: 100vh;
+      height: 100svh;
+      overflow: hidden;
+    }
+    :global(html.js) .historia-head {
+      opacity: 1;
+      transform: none;
+    }
+    :global(html.js) .historia-grid {
+      position: relative;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+      grid-template-rows: auto 1fr;
+      row-gap: 2.5rem;
+      column-gap: 4rem;
+      height: min(30rem, calc(100svh - 14rem));
+      margin-top: 2.5rem;
+    }
+    :global(html.js) .paso {
+      display: contents;
+    }
+    /* Todos los pasos ocupan la misma celda; GSAP los alterna */
+    :global(html.js) .paso-visual,
+    :global(html.js) .paso-texto,
+    :global(html.js) .historia-logo,
+    :global(html.js) .historia-cierre {
+      transform: none;
+      transition: none;
+    }
+    :global(html.js) .paso-visual {
+      grid-column: 2;
+      grid-row: 2;
+      align-self: start;
+      justify-self: center;
+      opacity: 0;
+      visibility: hidden;
+    }
+    :global(html.js) .paso-texto {
+      grid-column: 1;
+      grid-row: 1 / -1;
+      align-self: center;
+      justify-self: start;
+      text-align: left;
+      opacity: 0;
+      visibility: hidden;
+    }
+    :global(html.js) .paso-texto p:last-child {
+      margin-inline: 0;
+    }
+    :global(html.js) .paso-check path {
+      opacity: 0;
+    }
+    /* Estado inicial del paso 3; hero-scroll.ts lo anima (data-anim) */
+    :global(html.js) [data-anim] {
+      opacity: 0;
+      visibility: hidden;
+    }
+    :global(html.js) .historia-logo {
+      grid-column: 2;
+      grid-row: 1;
+      opacity: 1;
+    }
+    :global(html.js) .historia-vuelo {
+      display: block;
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+      /* centro de la palomita dentro del viewBox 64 64 896 896 */
+      transform-origin: 53.1% 48.9%;
+    }
+    /* La palomita real del logo se esconde: la copia que vuela la suplanta */
+    :global(html.js) .historia-home :global([data-capa='palomita']) {
+      opacity: 0;
+    }
+    :global(html.js) .historia-cierre {
+      grid-column: 1;
+      grid-row: 1 / -1;
+      align-self: center;
+      margin-top: 0;
+      text-align: left;
+      opacity: 0;
+      visibility: hidden;
+    }
+    :global(html.js) .historia-cierre p:nth-child(2) {
+      margin-inline: 0;
+    }
+    :global(html.js) .historia-cierre-acciones {
+      justify-content: flex-start;
+    }
+  }
+</style>

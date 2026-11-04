@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <title>Klokk</title>
+  <!-- Capa 1: fondo -->
+  <rect id="fondo" x="64" y="64" width="896" height="896" rx="224" fill="#4AB378"/>
+  <!-- Capa 2: burbuja de chat -->
+  <g id="burbuja" fill="#EDF1F5">
+    <rect x="208" y="256" width="624" height="464" rx="150"/>
+    <path d="M312 690 L312 848 L440 718 Z"/>
+  </g>
+  <!-- Capas 3-5: la K como trazos (para animar con stroke-dashoffset) -->
+  <g fill="none" stroke="#4AB378" stroke-width="72" stroke-linecap="round" stroke-linejoin="round">
+    <path id="palo" d="M400 338 L400 636"/>
+    <path id="brazo" d="M400 528 L627 301"/>
+    <path id="palomita" d="M400 452 L531 583 L680 420"/>
+  </g>
+</svg>

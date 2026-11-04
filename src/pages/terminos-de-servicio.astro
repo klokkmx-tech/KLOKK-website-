@@ -1,0 +1,27 @@
+---
+// Términos de servicio. Texto PENDIENTE: lo redacta/valida el abogado.
+import LegalLayout from '../layouts/LegalLayout.astro';
+import { LINKS } from '../lib/links';
+---
+
+<LegalLayout
+  title="Términos de servicio"
+  description="Términos de servicio de Klokk Technology, S. de R.L. de C.V."
+>
+  <section>
+    <h2>Prestador del servicio</h2>
+    <p>Klokk Technology, S. de R.L. de C.V., con domicilio en Mérida, Yucatán, México.</p>
+  </section>
+
+  <section>
+    <h2>Términos y condiciones</h2>
+    <p>
+      Los términos de servicio de Klokk están en revisión legal y se publicarán en esta página.
+    </p>
+    <p>
+      Para cualquier duda sobre las condiciones del servicio, escríbenos a{" "}
+      <a href={`mailto:${LINKS.email}`}>{LINKS.email}</a> o consulta el{" "}
+      <a href="/aviso-de-privacidad">Aviso de privacidad</a>.
+    </p>
+  </section>
+</LegalLayout>

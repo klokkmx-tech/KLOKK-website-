@@ -26,6 +26,7 @@
     "@tailwindcss/vite": "^4.3.3",
     "@vercel/functions": "^3.9.11",
     "astro": "^7.3.2",
+    "gsap": "^3.15.0",
     "pdf-lib": "^1.17.1",
     "qrcode": "^1.5.4",
     "tailwindcss": "^4.3.3",

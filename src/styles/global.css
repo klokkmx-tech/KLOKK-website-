@@ -1,5 +1,15 @@
 @import 'tailwindcss';
 
+/* Tailwind v4 escanea todo el repo buscando clases. El código del demo
+   (servidor, pruebas, SQL) no genera HTML: se excluye para que el CSS del
+   sitio no cambie por palabras sueltas como «table». */
+@source not '../server';
+@source not '../pages/api';
+@source not '../pages/a';
+@source not '../../tests';
+@source not '../../supabase';
+@source not '../../scripts';
+
 @import '@fontsource-variable/bricolage-grotesque';
 @import '@fontsource-variable/inter';
 @import '@fontsource/ibm-plex-mono/400.css';

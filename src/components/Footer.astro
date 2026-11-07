@@ -1,16 +1,17 @@
 ---
 import Logo from './Logo.astro';
-import { LINKS } from '../lib/links';
+import { EMPRESA, LINKS } from '../lib/links';
 ---
 
 <footer class="border-t border-neutral-200 bg-neutral-50">
   <div class="mx-auto grid max-w-6xl gap-10 px-5 py-12 sm:px-8 md:grid-cols-[1fr_1.3fr_auto] md:gap-14">
     <div>
       <Logo size={30} />
-      <p class="mt-4 text-[0.875rem] leading-relaxed text-neutral-600">
-        Klokk Technology, S. de R.L. de C.V.<br />
-        Mérida, Yucatán, México.
-      </p>
+      <address class="mt-4 text-[0.875rem] leading-relaxed text-neutral-600 not-italic">
+        {EMPRESA.razonSocial}<br />
+        {EMPRESA.domicilio}<br />
+        Tel. <a href={EMPRESA.telefonoHref} class="underline-offset-4 hover:text-ink-900 hover:underline">{EMPRESA.telefono}</a>
+      </address>
     </div>
 
     <p class="max-w-md text-[0.85rem] leading-relaxed text-neutral-500">

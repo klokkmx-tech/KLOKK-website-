@@ -4,6 +4,7 @@
 // documento definitivo basta con reemplazar el contenido y quitar `provisional`.
 import Layout from './Layout.astro';
 import Logo from '../components/Logo.astro';
+import { EMPRESA } from '../lib/links';
 
 interface Props {
   title: string;
@@ -42,7 +43,7 @@ const { title, description, provisional = true } = Astro.props;
 
   <footer class="border-t border-neutral-200 bg-neutral-50">
     <div class="mx-auto max-w-3xl px-5 py-8 text-[0.85rem] text-neutral-500 sm:px-8">
-      Klokk Technology, S. de R.L. de C.V. · Mérida, Yucatán, México.
+      {EMPRESA.razonSocial} · {EMPRESA.domicilio} · Tel. {EMPRESA.telefono}
     </div>
   </footer>
 </Layout>

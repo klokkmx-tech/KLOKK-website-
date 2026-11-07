@@ -1,7 +1,7 @@
 ---
 // Términos de servicio. Texto PENDIENTE: lo redacta/valida el abogado.
 import LegalLayout from '../layouts/LegalLayout.astro';
-import { LINKS } from '../lib/links';
+import { EMPRESA, LINKS } from '../lib/links';
 ---
 
 <LegalLayout
@@ -10,7 +10,7 @@ import { LINKS } from '../lib/links';
 >
   <section>
     <h2>Prestador del servicio</h2>
-    <p>Klokk Technology, S. de R.L. de C.V., con domicilio en Mérida, Yucatán, México.</p>
+    <p>{EMPRESA.razonSocial}, con domicilio en {EMPRESA.domicilio}. Teléfono: <a href={EMPRESA.telefonoHref}>{EMPRESA.telefono}</a>.</p>
   </section>
 
   <section>

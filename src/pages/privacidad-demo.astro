@@ -3,7 +3,7 @@
 // Texto PROVISIONAL: pendiente de revisión legal. Estática, prerenderizada.
 import Layout from '../layouts/Layout.astro';
 import Logo from '../components/Logo.astro';
-import { LINKS } from '../lib/links';
+import { EMPRESA, LINKS } from '../lib/links';
 
 const actualizado = '9 de octubre de 2026';
 
@@ -40,7 +40,7 @@ const conservacionDias = 90;
       <section>
         <h2>Responsable</h2>
         <p>
-          Klokk Technology, S. de R.L. de C.V., con domicilio en Mérida, Yucatán, México, es responsable del tratamiento
+          {EMPRESA.razonSocial}, con domicilio en {EMPRESA.domicilio}, es responsable del tratamiento
           de los datos personales que recaba el demo automático de Klokk por WhatsApp.
         </p>
       </section>
@@ -113,7 +113,7 @@ const conservacionDias = 90;
 
   <footer class="border-t border-neutral-200 bg-neutral-50">
     <div class="mx-auto max-w-3xl px-5 py-8 text-[0.85rem] text-neutral-500 sm:px-8">
-      Klokk Technology, S. de R.L. de C.V. · Mérida, Yucatán, México.
+      {EMPRESA.razonSocial} · {EMPRESA.domicilio} · Tel. {EMPRESA.telefono}
     </div>
   </footer>
 </Layout>

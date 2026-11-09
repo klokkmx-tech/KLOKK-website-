@@ -29,7 +29,7 @@ export const LINKS = {
 /** Datos de la empresa tal como se dieron de alta ante Meta (verificación del negocio). */
 export const EMPRESA = {
   razonSocial: 'Klokk Technology, S. de R.L. de C.V.',
-  domicilio: '28 363, Montebello, C.P. 97113, Mérida, Yucatán, México',
+  domicilio: 'Calle 28 363, Montebello, C.P. 97113, Mérida, Yucatán, México',
   telefono: '+52 999 115 5439',
   telefonoHref: 'tel:+529991155439',
 } as const;
